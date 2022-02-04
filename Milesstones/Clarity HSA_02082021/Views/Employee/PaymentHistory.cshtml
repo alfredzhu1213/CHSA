@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Payment History";
+
+    var employee = (Clarity_HSA.Models.User)@ViewData["employee"];
+}
+
+<h3>Payment History</h3>
+
+<br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Advance Number</th>
+        <th>Date</th>
+        <th>Payment Amount</th>
+        <th>Remaining Balance</th>
+    </tr>
+    @foreach (Clarity_HSA.Models.Loan loan in employee.employee.loans)
+    {
+        foreach (Clarity_HSA.Models.Payment payment in loan.payments)
+        {
+            <tr class="loan loan_0 loan_@loan.id">
+                <td>@loan.loan_number</td>
+                <td>@payment.payment_date</td>
+                <td>$@payment.payment_amount.ToString("#,##0.00")</td>
+                <td>$@payment.loan_remaining_balance.ToString("#,##0.00")</td>
+            </tr>
+        }
+    }
+</table>

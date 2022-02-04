@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Advances";
+}
+
+<h3>Advances</h3>
+
+<br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Advance ID</th>
+        <th>Employee</th>
+        <th>Balance</th>
+        <th>Monthly Payment</th>
+        <th>Last Payment Date</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    @foreach (Clarity_HSA.Models.User employee in (List<Clarity_HSA.Models.User>)@ViewData["employees"])
+    {
+        foreach (Clarity_HSA.Models.Loan loan in employee.employee.loans)
+        {
+
+        <tr>
+            <td><span id="loan_id_@loan.loan_id" style="display:none;">@loan.loan_id</span> <a href="#" id="loan_id_show_btn_@loan.loan_id" class="btn btn-sm btn-primary" onclick="$(this).hide(); $('#loan_id_@loan.loan_id').show(); $('#loan_id_hide_btn_@loan.loan_id').show();">Show</a><a href="#" id="loan_id_hide_btn_@loan.loan_id" style="display:none;" class="btn btn-sm btn-primary" onclick="$(this).hide(); $('#loan_id_@loan.loan_id').hide(); $('#loan_id_show_btn_@loan.loan_id').show();">Hide</a></td>
+            <td><a href="/Employer/EmployeeDetails/@employee.id" class="btn btn-link">@employee.first_name @employee.last_name</a></td>
+            <td>$@loan.balance.ToString("#,##0.00")</td>
+            <td>$@loan.monthly_payment.ToString("#,##0.00")</td>
+            <td>@loan.last_payment_date</td>
+            <td>
+                @if (loan.balance > 0)
+                {
+                    <span>Current</span>
+                }
+                else
+                {
+                    <span>Paid</span>
+                }
+            </td>
+            <td><a href="/Employer/LoanDetails/@loan.id" class="btn btn-default">View Details</a></td>
+        </tr>
+
+        }
+    }
+    
+</table>

@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+
+    var employee = (Clarity_HSA.Models.User)@ViewData["employee"];
+}
+
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Employee Details</a></li>
+        <li role="presentation"><a href="#loans" aria-controls="loans" role="tab" data-toggle="tab">Advances</a></li>
+        <li role="presentation"><a href="#charges" aria-controls="charges" role="tab" data-toggle="tab">Charges</a></li>
+        <li role="presentation"><a href="#deposits" aria-controls="deposits" role="tab" data-toggle="tab">Repayments</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home" style="padding:20px;">
+            <br />
+            <!--h4>My Advance Payoff Progress Bar:</!--h4>
+            <div style="width:100%; border:2px solid #999; height:40px;">
+                <div style="width:@ViewData["progress_percent"]%; background-color:#0a5065; height:36px;">
+                    &nbsp;
+                </div>
+            </div-->
+            <div id="container1" style="width: 400px; height: 400px;"></div>
+            <!--br />
+            @ViewData["deposit_total"] / @ViewData["charge_total"]
+            <br /-->
+            <br /><br />
+            <div class="col-md-4">
+                <table class="table col-md-4">
+                    <tr>
+                        <td><b>First Name</b></td>
+                        <td>@employee.first_name</td>
+                    </tr>
+                    <tr>
+                        <td><b>Last Name</b></td>
+                        <td>@employee.last_name</td>
+                    </tr>
+                    <tr>
+                        <td><b>DOB</b></td>
+                        <td>@employee.employee.dob.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <td><b>Company ID</b></td>
+                        <td>@employee.employee.company_identifier</td>
+                    </tr>
+                    <tr>
+                        <td><b>Social Security Number</b></td>
+                        <td>xxx-xx-@employee.employee.social_security_last_four</td>
+                    </tr>
+                    <tr>
+                        <td><b>Employer</b></td>
+                        <td>@employee.roles.First().organization.name</td>
+                    </tr>
+                    <tr>
+                        <td><b>Email</b></td>
+                        <td>@employee.email</td>
+                    </tr>
+                    <tr>
+                        <td><b>Address</b></td>
+                        <td>@employee.employee.address</td>
+                    </tr>
+                    <tr>
+                        <td><b></b></td>
+                        <td>@employee.employee.city, @employee.employee.state @employee.employee.zip</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="loans" style="padding:20px;">
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Advance ID</th>
+                    <th>Balance</th>
+                    <th>Monthly Payment</th>
+                    <th>Last Payment Date</th>
+                    <th>Status</th>
+                </tr>
+                @foreach (Clarity_HSA.Models.Loan loan in employee.employee.loans)
+                {
+                    <tr>
+                        <td><span id="loan_id_@loan.loan_id" style="display:none;">@loan.loan_id</span><a href="#" id="loan_id_show_btn_@loan.loan_id" class="btn btn-sm btn-primary" onclick="$(this).hide(); $('#loan_id_@loan.loan_id').show(); $('#loan_id_hide_btn_@loan.loan_id').show();">Show</a><a href="#" id="loan_id_hide_btn_@loan.loan_id" style="display:none;" class="btn btn-sm btn-primary" onclick="$(this).hide(); $('#loan_id_@loan.loan_id').hide(); $('#loan_id_show_btn_@loan.loan_id').show();">Hide</a></td>
+                        <td>$@loan.balance.ToString("#,##0.00")</td>
+                        <td>$@loan.monthly_payment.ToString("#,##0.00")</td>
+                        <td>@loan.last_payment_date</td>
+                        <td>
+                            @if (loan.balance > 0)
+                            {
+                                <span>Current</span>
+                            }
+                            else
+                            {
+                                <span>Paid</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="charges" style="padding:20px;">
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Claim Type</th>
+                    <th>Description</th>
+                    <th>Total Claim Amount</th>
+                    <th>Approved Amount</th>
+                </tr>
+                @foreach (Clarity_HSA.Models.Charge charge in employee.employee.charges)
+                {
+                    <tr>
+                        <td>@charge.transaction_date.ToShortDateString()</td>
+                        <td>@charge.claim_type</td>
+                        <td>@charge.description</td>
+                        <td>$@charge.total_claim_amount.ToString("#,##0.00")</td>
+                        <td>$@charge.approved_amount.ToString("#,##0.00")</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="deposits" style="padding:20px;">
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Payroll Date</th>
+                    <th>Employee Contribution</th>
+                    <th>Repayment Type</th>
+                </tr>
+                @foreach (Clarity_HSA.Models.Deposit deposit in employee.employee.deposits)
+                {
+                    <tr>
+                        <td>@deposit.payroll_date.ToShortDateString()</td>
+                        <td>$@deposit.employee_contribution.ToString("#,##0.00")</td>
+                        <td>@deposit.deposit_type</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function ()
+    {
+        Highcharts.chart('container1', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'My Advance Payoff Progress'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>${point.y:.2f}</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Balance',
+                colorByPoint: true,
+                data: [
+                {
+                    name: 'Paid',
+                    y: @ViewData["deposit_total_scrubbed"],
+                },
+                {
+                    name: 'Outstanding',
+                    y: @ViewData["charge_total_scrubbed"],
+                    sliced: true,
+                    selected: true
+                }]
+            }]
+        });
+    });
+
+</script>

@@ -1,0 +1,1984 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ClarityContext.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AvailableEntities">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="entity_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="valid_parent_type" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AvailableEntityOptions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="option_string" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="available_entity_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Charges">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="transaction_date" Type="datetime" Nullable="false" />
+          <Property Name="claim_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="total_claim_amount" Type="float" Nullable="false" />
+          <Property Name="eligible_amount" Type="float" Nullable="false" />
+          <Property Name="approved_amount" Type="float" Nullable="false" />
+          <Property Name="ineligible_amount" Type="float" Nullable="false" />
+          <Property Name="pended_amount" Type="float" Nullable="false" />
+          <Property Name="denied_amount" Type="float" Nullable="false" />
+          <Property Name="denied_reason" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="claim_number" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="scc_mcc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="employee_id" Type="int" Nullable="false" />
+          <Property Name="loan_id" Type="int" />
+        </EntityType>
+        <EntityType Name="CronLogs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cron_timestamp" Type="datetime" Nullable="false" />
+          <Property Name="cron_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="cron_log" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomReportSchedules">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="month" Type="int" Nullable="false" />
+          <Property Name="day" Type="int" Nullable="false" />
+          <Property Name="report_id" Type="int" Nullable="false" />
+          <Property Name="recurrence" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="start_date" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DashboardConfigs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="quadrant_1" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="quadrant_2" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="quadrant_3" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="quadrant_4" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Demographics">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dob" Type="datetime" Nullable="false" />
+          <Property Name="social_security_num" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="city" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="state" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="zip" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="country" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="company_identifier" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="last_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="email" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="balance" Type="float" Nullable="false" />
+          <Property Name="monthly_payment" Type="float" Nullable="false" />
+          <Property Name="social_security_last_four" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="terminated" Type="bit" Nullable="false" />
+          <Property Name="status" Type="nvarchar(max)" />
+          <Property Name="maximum_advance_amount" Type="float" Nullable="false" />
+          <Property Name="hsa_balance" Type="float" Nullable="false" />
+          <Property Name="payroll_identifier" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="termination_date" Type="datetime" />
+          <Property Name="goal" Type="float" />
+          <Property Name="company_payroll_identifier" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Deposits">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="payroll_date" Type="datetime" Nullable="false" />
+          <Property Name="employee_contribution" Type="float" Nullable="false" />
+          <Property Name="employer_contribution" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="loan_remaining_balance" Type="float" Nullable="false" />
+          <Property Name="plan_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="plan_begin" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="plan_end" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="employee_id" Type="int" Nullable="false" />
+          <Property Name="deposit_type" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="EntityOptions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="option_value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="report_entity_id" Type="int" Nullable="false" />
+          <Property Name="available_entity_option_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FeedLogDetails">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="log_message" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="message_timestamp" Type="datetime" Nullable="false" />
+          <Property Name="feed_log_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FeedLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="feed_timestamp" Type="datetime" Nullable="false" />
+          <Property Name="feed_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="feed_direction" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="feed_location" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="successful" Type="bit" Nullable="false" />
+          <Property Name="organization_setting_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fields">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="source" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="field_key" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="field_format" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Loans">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="loan_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="balance" Type="float" Nullable="false" />
+          <Property Name="monthly_payment" Type="float" Nullable="false" />
+          <Property Name="last_payment_date" Type="datetime" Nullable="false" />
+          <Property Name="employee_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Organizations">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="parent_organization_id" Type="int" />
+          <Property Name="logo_url" Type="nvarchar(max)" />
+          <Property Name="color_1" Type="nvarchar(max)" />
+          <Property Name="color_2" Type="nvarchar(max)" />
+          <Property Name="company_id" Type="nvarchar(max)" />
+          <Property Name="payroll_id" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="OrganizationSettings">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="deposits_feed" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="demographics_feed" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="alegeus_feed" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="organization_id" Type="int" Nullable="false" />
+          <Property Name="withhold_entire_balance" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RepaymentTables">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="loan_amount_min" Type="float" Nullable="false" />
+          <Property Name="loan_amount_max" Type="float" Nullable="false" />
+          <Property Name="repaymant_amount" Type="float" Nullable="false" />
+          <Property Name="organization_settings_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Report834Options">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="isa02" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa03" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa04" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa05" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa06" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa07" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa08" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa13" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa14" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="report_id" Type="int" Nullable="false" />
+          <Property Name="gs02" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="gs03" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="gs06" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="gs08" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="bgn02" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="bgn08" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="st02" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="dtp03" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa01" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isa15" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="bgn06" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ref02" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="dtp01" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n102a" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n103a" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n104a" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n102b" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n103b" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n104b" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n102c" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n103c" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="n104c" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="dtp01b" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="dtp03b" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="include_qty_a" Type="int" Nullable="false" />
+          <Property Name="include_qty_b" Type="int" Nullable="false" />
+          <Property Name="include_qty_c" Type="int" Nullable="false" />
+          <Property Name="include_n1_a" Type="int" Nullable="false" />
+          <Property Name="include_n1_b" Type="int" Nullable="false" />
+          <Property Name="include_n1_c" Type="int" Nullable="false" />
+          <Property Name="include_dtp_a" Type="int" Nullable="false" />
+          <Property Name="include_dtp_b" Type="int" Nullable="false" />
+          <Property Name="remove_line_breaks" Type="bit" Nullable="false" />
+          <Property Name="remove_tildes" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportEntities">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="indentation_level" Type="int" Nullable="false" />
+          <Property Name="caption" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="format" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="literal_value" Type="nvarchar(max)" />
+          <Property Name="available_entity_id" Type="int" Nullable="false" />
+          <Property Name="report_id" Type="int" Nullable="false" />
+          <Property Name="parent_entities_id" Type="int" />
+          <Property Name="option" Type="nvarchar(max)" />
+          <Property Name="section_delimiter" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="format_json" Type="nvarchar(max)" />
+          <Property Name="map_json" Type="nvarchar(max)" />
+          <Property Name="format_option_fixed_width" Type="int" Nullable="false" />
+          <Property Name="format_option_fixed_width_val" Type="int" />
+          <Property Name="format_option_capitalize_entire_element" Type="int" Nullable="false" />
+          <Property Name="format_option_remove_characters" Type="int" Nullable="false" />
+          <Property Name="format_option_remove_characters_list" Type="nvarchar(max)" />
+          <Property Name="format_option_date" Type="int" Nullable="false" />
+          <Property Name="format_option_date_format" Type="nvarchar(max)" />
+          <Property Name="format_option_currency" Type="int" Nullable="false" />
+          <Property Name="format_option_currency_format" Type="nvarchar(max)" />
+          <Property Name="collapsed" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportFieldChanges">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="field_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="field_value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="unique_identifier" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="record_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="report_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportFields">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="source" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="format" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="field_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="calculation" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="field_order" Type="int" Nullable="false" />
+          <Property Name="report_id" Type="int" Nullable="false" />
+          <Property Name="field_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Reports">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="grouping_field" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="show_totals" Type="bit" Nullable="false" />
+          <Property Name="show_subtotals" Type="bit" Nullable="false" />
+          <Property Name="output_format" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="delivery_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="schedule_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="organization_id" Type="int" />
+          <Property Name="delivery_email_address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="delivery_ftp_address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="delivery_ftp_username" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="delivery_ftp_password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="delivery_ftp_port" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="delivery_ftp_path" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="is_report_builder" Type="bit" Nullable="false" />
+          <Property Name="global_report_orgs" Type="nvarchar(max)" />
+          <Property Name="header" Type="nvarchar(max)" />
+          <Property Name="footer" Type="nvarchar(max)" />
+          <Property Name="xml_file_path" Type="nvarchar(max)" />
+          <Property Name="output_filename" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="access_level" Type="int" Nullable="false" />
+          <Property Name="role_type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="organization_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Terminations">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="employee_key" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="report_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="email" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="last_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="password" Type="nvarchar(max)" />
+          <Property Name="employee_id" Type="int" />
+        </EntityType>
+        <Association Name="FK_AvailableEntityEntityOption">
+          <End Role="AvailableEntities" Type="Self.AvailableEntities" Multiplicity="1" />
+          <End Role="AvailableEntityOptions" Type="Self.AvailableEntityOptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AvailableEntities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AvailableEntityOptions">
+              <PropertyRef Name="available_entity_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AvailableEntityOptionEntityOption">
+          <End Role="AvailableEntityOptions" Type="Self.AvailableEntityOptions" Multiplicity="1" />
+          <End Role="EntityOptions" Type="Self.EntityOptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AvailableEntityOptions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EntityOptions">
+              <PropertyRef Name="available_entity_option_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AvailableEntityReportEntity">
+          <End Role="AvailableEntities" Type="Self.AvailableEntities" Multiplicity="1" />
+          <End Role="ReportEntities" Type="Self.ReportEntities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AvailableEntities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReportEntities">
+              <PropertyRef Name="available_entity_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DemographicDeposit">
+          <End Role="Demographics" Type="Self.Demographics" Multiplicity="1" />
+          <End Role="Deposits" Type="Self.Deposits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Demographics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Deposits">
+              <PropertyRef Name="employee_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DemographicLoan">
+          <End Role="Demographics" Type="Self.Demographics" Multiplicity="1" />
+          <End Role="Loans" Type="Self.Loans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Demographics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Loans">
+              <PropertyRef Name="employee_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeLoan">
+          <End Role="Demographics" Type="Self.Demographics" Multiplicity="1" />
+          <End Role="Charges" Type="Self.Charges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Demographics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Charges">
+              <PropertyRef Name="employee_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeUser">
+          <End Role="Demographics" Type="Self.Demographics" Multiplicity="0..1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Demographics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="employee_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FieldReportField">
+          <End Role="Fields" Type="Self.Fields" Multiplicity="1" />
+          <End Role="ReportFields" Type="Self.ReportFields" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fields">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReportFields">
+              <PropertyRef Name="field_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoanCharge">
+          <End Role="Loans" Type="Self.Loans" Multiplicity="0..1" />
+          <End Role="Charges" Type="Self.Charges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Loans">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Charges">
+              <PropertyRef Name="loan_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganizationOrganization">
+          <End Role="Organizations" Type="Self.Organizations" Multiplicity="0..1" />
+          <End Role="Organizations1" Type="Self.Organizations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Organizations1">
+              <PropertyRef Name="parent_organization_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganizationOrganizationSettings">
+          <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+          <End Role="OrganizationSettings" Type="Self.OrganizationSettings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrganizationSettings">
+              <PropertyRef Name="organization_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganizationReport">
+          <End Role="Organizations" Type="Self.Organizations" Multiplicity="0..1" />
+          <End Role="Reports" Type="Self.Reports" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Reports">
+              <PropertyRef Name="organization_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganizationRole">
+          <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+          <End Role="Roles" Type="Self.Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Roles">
+              <PropertyRef Name="organization_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganizationSettingsFeedLog">
+          <End Role="OrganizationSettings" Type="Self.OrganizationSettings" Multiplicity="1" />
+          <End Role="FeedLogs" Type="Self.FeedLogs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrganizationSettings">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="FeedLogs">
+              <PropertyRef Name="organization_setting_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RateTableOrganizationSettings">
+          <End Role="OrganizationSettings" Type="Self.OrganizationSettings" Multiplicity="1" />
+          <End Role="RepaymentTables" Type="Self.RepaymentTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrganizationSettings">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RepaymentTables">
+              <PropertyRef Name="organization_settings_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportCustomReportSchedule">
+          <End Role="Reports" Type="Self.Reports" Multiplicity="1" />
+          <End Role="CustomReportSchedules" Type="Self.CustomReportSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reports">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CustomReportSchedules">
+              <PropertyRef Name="report_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportEntityEntityOption">
+          <End Role="ReportEntities" Type="Self.ReportEntities" Multiplicity="1" />
+          <End Role="EntityOptions" Type="Self.EntityOptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReportEntities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EntityOptions">
+              <PropertyRef Name="report_entity_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportEntityReportEntity">
+          <End Role="ReportEntities" Type="Self.ReportEntities" Multiplicity="0..1" />
+          <End Role="ReportEntities1" Type="Self.ReportEntities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReportEntities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReportEntities1">
+              <PropertyRef Name="parent_entities_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportReport834Options">
+          <End Role="Reports" Type="Self.Reports" Multiplicity="1" />
+          <End Role="Report834Options" Type="Self.Report834Options" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reports">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Report834Options">
+              <PropertyRef Name="report_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportReportEntity">
+          <End Role="Reports" Type="Self.Reports" Multiplicity="1" />
+          <End Role="ReportEntities" Type="Self.ReportEntities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reports">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReportEntities">
+              <PropertyRef Name="report_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportReportFieldChange">
+          <End Role="Reports" Type="Self.Reports" Multiplicity="1" />
+          <End Role="ReportFieldChanges" Type="Self.ReportFieldChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reports">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReportFieldChanges">
+              <PropertyRef Name="report_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportTermination">
+          <End Role="Reports" Type="Self.Reports" Multiplicity="1" />
+          <End Role="Terminations" Type="Self.Terminations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reports">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Terminations">
+              <PropertyRef Name="report_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserDashboardConfig">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="DashboardConfigs" Type="Self.DashboardConfigs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DashboardConfigs">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Roles" Type="Self.Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Roles">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ClarityContextStoreContainer">
+          <EntitySet Name="AvailableEntities" EntityType="Self.AvailableEntities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AvailableEntityOptions" EntityType="Self.AvailableEntityOptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Charges" EntityType="Self.Charges" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CronLogs" EntityType="Self.CronLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomReportSchedules" EntityType="Self.CustomReportSchedules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DashboardConfigs" EntityType="Self.DashboardConfigs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Demographics" EntityType="Self.Demographics" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Deposits" EntityType="Self.Deposits" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntityOptions" EntityType="Self.EntityOptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FeedLogDetails" EntityType="Self.FeedLogDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FeedLogs" EntityType="Self.FeedLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fields" EntityType="Self.Fields" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Loans" EntityType="Self.Loans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Organizations" EntityType="Self.Organizations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrganizationSettings" EntityType="Self.OrganizationSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RepaymentTables" EntityType="Self.RepaymentTables" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Report834Options" EntityType="Self.Report834Options" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportEntities" EntityType="Self.ReportEntities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportFieldChanges" EntityType="Self.ReportFieldChanges" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportFields" EntityType="Self.ReportFields" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reports" EntityType="Self.Reports" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Terminations" EntityType="Self.Terminations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AvailableEntityEntityOption" Association="Self.FK_AvailableEntityEntityOption">
+            <End Role="AvailableEntities" EntitySet="AvailableEntities" />
+            <End Role="AvailableEntityOptions" EntitySet="AvailableEntityOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AvailableEntityOptionEntityOption" Association="Self.FK_AvailableEntityOptionEntityOption">
+            <End Role="AvailableEntityOptions" EntitySet="AvailableEntityOptions" />
+            <End Role="EntityOptions" EntitySet="EntityOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AvailableEntityReportEntity" Association="Self.FK_AvailableEntityReportEntity">
+            <End Role="AvailableEntities" EntitySet="AvailableEntities" />
+            <End Role="ReportEntities" EntitySet="ReportEntities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DemographicDeposit" Association="Self.FK_DemographicDeposit">
+            <End Role="Demographics" EntitySet="Demographics" />
+            <End Role="Deposits" EntitySet="Deposits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DemographicLoan" Association="Self.FK_DemographicLoan">
+            <End Role="Demographics" EntitySet="Demographics" />
+            <End Role="Loans" EntitySet="Loans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeLoan" Association="Self.FK_EmployeeLoan">
+            <End Role="Demographics" EntitySet="Demographics" />
+            <End Role="Charges" EntitySet="Charges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeUser" Association="Self.FK_EmployeeUser">
+            <End Role="Demographics" EntitySet="Demographics" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FieldReportField" Association="Self.FK_FieldReportField">
+            <End Role="Fields" EntitySet="Fields" />
+            <End Role="ReportFields" EntitySet="ReportFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoanCharge" Association="Self.FK_LoanCharge">
+            <End Role="Loans" EntitySet="Loans" />
+            <End Role="Charges" EntitySet="Charges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganizationOrganization" Association="Self.FK_OrganizationOrganization">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="Organizations1" EntitySet="Organizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganizationOrganizationSettings" Association="Self.FK_OrganizationOrganizationSettings">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="OrganizationSettings" EntitySet="OrganizationSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganizationReport" Association="Self.FK_OrganizationReport">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="Reports" EntitySet="Reports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganizationRole" Association="Self.FK_OrganizationRole">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="Roles" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganizationSettingsFeedLog" Association="Self.FK_OrganizationSettingsFeedLog">
+            <End Role="OrganizationSettings" EntitySet="OrganizationSettings" />
+            <End Role="FeedLogs" EntitySet="FeedLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RateTableOrganizationSettings" Association="Self.FK_RateTableOrganizationSettings">
+            <End Role="OrganizationSettings" EntitySet="OrganizationSettings" />
+            <End Role="RepaymentTables" EntitySet="RepaymentTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportCustomReportSchedule" Association="Self.FK_ReportCustomReportSchedule">
+            <End Role="Reports" EntitySet="Reports" />
+            <End Role="CustomReportSchedules" EntitySet="CustomReportSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportEntityEntityOption" Association="Self.FK_ReportEntityEntityOption">
+            <End Role="ReportEntities" EntitySet="ReportEntities" />
+            <End Role="EntityOptions" EntitySet="EntityOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportEntityReportEntity" Association="Self.FK_ReportEntityReportEntity">
+            <End Role="ReportEntities" EntitySet="ReportEntities" />
+            <End Role="ReportEntities1" EntitySet="ReportEntities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportReport834Options" Association="Self.FK_ReportReport834Options">
+            <End Role="Reports" EntitySet="Reports" />
+            <End Role="Report834Options" EntitySet="Report834Options" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportReportEntity" Association="Self.FK_ReportReportEntity">
+            <End Role="Reports" EntitySet="Reports" />
+            <End Role="ReportEntities" EntitySet="ReportEntities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportReportFieldChange" Association="Self.FK_ReportReportFieldChange">
+            <End Role="Reports" EntitySet="Reports" />
+            <End Role="ReportFieldChanges" EntitySet="ReportFieldChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportTermination" Association="Self.FK_ReportTermination">
+            <End Role="Reports" EntitySet="Reports" />
+            <End Role="Terminations" EntitySet="Terminations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserDashboardConfig" Association="Self.FK_UserDashboardConfig">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="DashboardConfigs" EntitySet="DashboardConfigs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole" Association="Self.FK_UserRole">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Roles" EntitySet="Roles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ClarityContext" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="ClarityContextContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="ClarityContext.User" />
+          <EntitySet Name="Organizations" EntityType="ClarityContext.Organization" />
+          <EntitySet Name="Roles" EntityType="ClarityContext.Role" />
+          <AssociationSet Name="UserRole" Association="ClarityContext.UserRole">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="OrganizationRole" Association="ClarityContext.OrganizationRole">
+            <End Role="Organization" EntitySet="Organizations" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="OrganizationOrganization" Association="ClarityContext.OrganizationOrganization">
+            <End Role="Organization" EntitySet="Organizations" />
+            <End Role="Organization1" EntitySet="Organizations" />
+          </AssociationSet>
+          <EntitySet Name="Demographics" EntityType="ClarityContext.Demographic" />
+          <AssociationSet Name="EmployeeUser" Association="ClarityContext.EmployeeUser">
+            <End Role="Employee" EntitySet="Demographics" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="Charges" EntityType="ClarityContext.Charge" />
+          <AssociationSet Name="EmployeeLoan" Association="ClarityContext.EmployeeLoan">
+            <End Role="Employee" EntitySet="Demographics" />
+            <End Role="Loan" EntitySet="Charges" />
+          </AssociationSet>
+          <EntitySet Name="Deposits" EntityType="ClarityContext.Deposit" />
+          <EntitySet Name="DashboardConfigs" EntityType="ClarityContext.DashboardConfig" />
+          <AssociationSet Name="UserDashboardConfig" Association="ClarityContext.UserDashboardConfig">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DashboardConfig" EntitySet="DashboardConfigs" />
+          </AssociationSet>
+          <EntitySet Name="OrganizationSettings" EntityType="ClarityContext.OrganizationSettings" />
+          <AssociationSet Name="OrganizationOrganizationSettings" Association="ClarityContext.OrganizationOrganizationSettings">
+            <End Role="Organization" EntitySet="Organizations" />
+            <End Role="OrganizationSettings" EntitySet="OrganizationSettings" />
+          </AssociationSet>
+          <EntitySet Name="Reports" EntityType="ClarityContext.Report" />
+          <AssociationSet Name="OrganizationReport" Association="ClarityContext.OrganizationReport">
+            <End Role="Organization" EntitySet="Organizations" />
+            <End Role="Report" EntitySet="Reports" />
+          </AssociationSet>
+          <EntitySet Name="CustomReportSchedules" EntityType="ClarityContext.CustomReportSchedule" />
+          <AssociationSet Name="ReportCustomReportSchedule" Association="ClarityContext.ReportCustomReportSchedule">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="CustomReportSchedule" EntitySet="CustomReportSchedules" />
+          </AssociationSet>
+          <EntitySet Name="ReportFields" EntityType="ClarityContext.ReportField" />
+          <AssociationSet Name="ReportReportField" Association="ClarityContext.ReportReportField">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="ReportField" EntitySet="ReportFields" />
+          </AssociationSet>
+          <EntitySet Name="Fields" EntityType="ClarityContext.Field" />
+          <AssociationSet Name="FieldReportField" Association="ClarityContext.FieldReportField">
+            <End Role="Field" EntitySet="Fields" />
+            <End Role="ReportField" EntitySet="ReportFields" />
+          </AssociationSet>
+          <AssociationSet Name="DemographicDeposit" Association="ClarityContext.DemographicDeposit">
+            <End Role="Demographic" EntitySet="Demographics" />
+            <End Role="Deposit" EntitySet="Deposits" />
+          </AssociationSet>
+          <EntitySet Name="FeedLogs" EntityType="ClarityContext.FeedLog" />
+          <AssociationSet Name="OrganizationSettingsFeedLog" Association="ClarityContext.OrganizationSettingsFeedLog">
+            <End Role="OrganizationSettings" EntitySet="OrganizationSettings" />
+            <End Role="FeedLog" EntitySet="FeedLogs" />
+          </AssociationSet>
+          <EntitySet Name="RepaymentTables" EntityType="ClarityContext.RepaymentTable" />
+          <AssociationSet Name="RateTableOrganizationSettings" Association="ClarityContext.RateTableOrganizationSettings">
+            <End Role="RateTable" EntitySet="RepaymentTables" />
+            <End Role="OrganizationSettings" EntitySet="OrganizationSettings" />
+          </AssociationSet>
+          <EntitySet Name="Loans" EntityType="ClarityContext.Loan" />
+          <AssociationSet Name="LoanCharge" Association="ClarityContext.LoanCharge">
+            <End Role="Loan" EntitySet="Loans" />
+            <End Role="Charge" EntitySet="Charges" />
+          </AssociationSet>
+          <AssociationSet Name="DemographicLoan" Association="ClarityContext.DemographicLoan">
+            <End Role="Demographic" EntitySet="Demographics" />
+            <End Role="Loan" EntitySet="Loans" />
+          </AssociationSet>
+          <EntitySet Name="AvailableEntities" EntityType="ClarityContext.AvailableEntity" />
+          <EntitySet Name="AvailableEntityOptions" EntityType="ClarityContext.AvailableEntityOption" />
+          <AssociationSet Name="AvailableEntityEntityOption" Association="ClarityContext.AvailableEntityEntityOption">
+            <End Role="AvailableEntity" EntitySet="AvailableEntities" />
+            <End Role="EntityOption" EntitySet="AvailableEntityOptions" />
+          </AssociationSet>
+          <EntitySet Name="ReportEntities" EntityType="ClarityContext.ReportEntity" />
+          <AssociationSet Name="AvailableEntityReportEntity" Association="ClarityContext.AvailableEntityReportEntity">
+            <End Role="AvailableEntity" EntitySet="AvailableEntities" />
+            <End Role="ReportEntity" EntitySet="ReportEntities" />
+          </AssociationSet>
+          <AssociationSet Name="ReportReportEntity" Association="ClarityContext.ReportReportEntity">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="ReportEntity" EntitySet="ReportEntities" />
+          </AssociationSet>
+          <EntitySet Name="EntityOptions" EntityType="ClarityContext.EntityOption" />
+          <AssociationSet Name="ReportEntityEntityOption" Association="ClarityContext.ReportEntityEntityOption">
+            <End Role="ReportEntity" EntitySet="ReportEntities" />
+            <End Role="EntityOption" EntitySet="EntityOptions" />
+          </AssociationSet>
+          <AssociationSet Name="AvailableEntityOptionEntityOption" Association="ClarityContext.AvailableEntityOptionEntityOption">
+            <End Role="AvailableEntityOption" EntitySet="AvailableEntityOptions" />
+            <End Role="EntityOption" EntitySet="EntityOptions" />
+          </AssociationSet>
+          <AssociationSet Name="ReportEntityReportEntity" Association="ClarityContext.ReportEntityReportEntity">
+            <End Role="ReportEntity" EntitySet="ReportEntities" />
+            <End Role="ReportEntity1" EntitySet="ReportEntities" />
+          </AssociationSet>
+          <EntitySet Name="ReportFieldChanges" EntityType="ClarityContext.ReportFieldChange" />
+          <AssociationSet Name="ReportReportFieldChange" Association="ClarityContext.ReportReportFieldChange">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="ReportFieldChange" EntitySet="ReportFieldChanges" />
+          </AssociationSet>
+          <EntitySet Name="FeedLogDetails" EntityType="ClarityContext.FeedLogDetail" />
+          <AssociationSet Name="FeedLogFeedLogDetail" Association="ClarityContext.FeedLogFeedLogDetail">
+            <End Role="FeedLog" EntitySet="FeedLogs" />
+            <End Role="FeedLogDetail" EntitySet="FeedLogDetails" />
+          </AssociationSet>
+          <EntitySet Name="Report834Options" EntityType="ClarityContext.Report834Options" />
+          <AssociationSet Name="ReportReport834Options" Association="ClarityContext.ReportReport834Options">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="Report834Options" EntitySet="Report834Options" />
+          </AssociationSet>
+          <EntitySet Name="CronLogs" EntityType="ClarityContext.CronLog" />
+          <EntitySet Name="Terminations" EntityType="ClarityContext.Termination" />
+          <AssociationSet Name="ReportTermination" Association="ClarityContext.ReportTermination">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="Termination" EntitySet="Terminations" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="first_name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="last_name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="roles" Relationship="ClarityContext.UserRole" FromRole="User" ToRole="Role" />
+          <Property Name="password" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="employee" Relationship="ClarityContext.EmployeeUser" FromRole="User" ToRole="Employee" />
+          <NavigationProperty Name="dashboard_config" Relationship="ClarityContext.UserDashboardConfig" FromRole="User" ToRole="DashboardConfig" />
+        </EntityType>
+        <EntityType Name="Organization">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="roles" Relationship="ClarityContext.OrganizationRole" FromRole="Organization" ToRole="Role" />
+          <NavigationProperty Name="child_organizations" Relationship="ClarityContext.OrganizationOrganization" FromRole="Organization" ToRole="Organization1" />
+          <NavigationProperty Name="parent_organization" Relationship="ClarityContext.OrganizationOrganization" FromRole="Organization1" ToRole="Organization" />
+          <NavigationProperty Name="organization_settings" Relationship="ClarityContext.OrganizationOrganizationSettings" FromRole="Organization" ToRole="OrganizationSettings" />
+          <NavigationProperty Name="reports" Relationship="ClarityContext.OrganizationReport" FromRole="Organization" ToRole="Report" />
+          <Property Name="logo_url" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="color_1" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="color_2" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="company_id" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="payroll_id" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="access_level" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="ClarityContext.UserRole" FromRole="Role" ToRole="User" />
+          <NavigationProperty Name="organization" Relationship="ClarityContext.OrganizationRole" FromRole="Role" ToRole="Organization" />
+          <Property Name="role_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <Association Name="UserRole">
+          <End Type="ClarityContext.User" Role="User" Multiplicity="1" />
+          <End Type="ClarityContext.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <Association Name="OrganizationRole">
+          <End Type="ClarityContext.Organization" Role="Organization" Multiplicity="1" />
+          <End Type="ClarityContext.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <Association Name="OrganizationOrganization">
+          <End Type="ClarityContext.Organization" Role="Organization" Multiplicity="0..1" />
+          <End Type="ClarityContext.Organization" Role="Organization1" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Demographic">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dob" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="social_security_num" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="social_security_last_four" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="address" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="city" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="state" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="zip" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="user" Relationship="ClarityContext.EmployeeUser" FromRole="Employee" ToRole="User" />
+          <NavigationProperty Name="charges" Relationship="ClarityContext.EmployeeLoan" FromRole="Employee" ToRole="Loan" />
+          <Property Name="country" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="company_identifier" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="first_name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="last_name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="balance" Type="Double" Nullable="false" />
+          <Property Name="monthly_payment" Type="Double" Nullable="false" />
+          <NavigationProperty Name="deposits" Relationship="ClarityContext.DemographicDeposit" FromRole="Demographic" ToRole="Deposit" />
+          <NavigationProperty Name="loans" Relationship="ClarityContext.DemographicLoan" FromRole="Demographic" ToRole="Loan" />
+          <Property Name="terminated" Type="Boolean" Nullable="false" DefaultValue="false" />
+          <Property Name="status" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="maximum_advance_amount" Type="Double" Nullable="false" DefaultValue="0" />
+          <Property Name="hsa_balance" Type="Double" Nullable="false" DefaultValue="0" />
+          <Property Name="payroll_identifier" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="termination_date" Type="DateTime" Nullable="true" Precision="3" />
+          <Property Name="goal" Type="Double" Nullable="true" />
+          <Property Name="company_payroll_identifier" Type="String" Nullable="true" />
+        </EntityType>
+        <Association Name="EmployeeUser">
+          <End Type="ClarityContext.Demographic" Role="Employee" Multiplicity="0..1" />
+          <End Type="ClarityContext.User" Role="User" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="Charge">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="transaction_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="claim_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="total_claim_amount" Type="Double" Nullable="false" />
+          <NavigationProperty Name="employee" Relationship="ClarityContext.EmployeeLoan" FromRole="Loan" ToRole="Employee" />
+          <Property Name="eligible_amount" Type="Double" Nullable="false" />
+          <Property Name="approved_amount" Type="Double" Nullable="false" />
+          <Property Name="ineligible_amount" Type="Double" Nullable="false" />
+          <Property Name="pended_amount" Type="Double" Nullable="false" />
+          <Property Name="denied_amount" Type="Double" Nullable="false" />
+          <Property Name="denied_reason" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="claim_number" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="scc_mcc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="loan" Relationship="ClarityContext.LoanCharge" FromRole="Charge" ToRole="Loan" />
+        </EntityType>
+        <Association Name="EmployeeLoan">
+          <End Type="ClarityContext.Demographic" Role="Employee" Multiplicity="1" />
+          <End Type="ClarityContext.Charge" Role="Loan" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Deposit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="payroll_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="employee_contribution" Type="Double" Nullable="false" />
+          <Property Name="employer_contribution" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="loan_remaining_balance" Type="Double" Nullable="false" />
+          <NavigationProperty Name="employee" Relationship="ClarityContext.DemographicDeposit" FromRole="Deposit" ToRole="Demographic" />
+          <Property Name="plan_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="plan_begin" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="plan_end" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="deposit_type" Type="String" Unicode="true" FixedLength="false" MaxLength="Max" />
+        </EntityType>
+        <EntityType Name="DashboardConfig">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="quadrant_1" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="quadrant_2" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="quadrant_3" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="quadrant_4" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="user" Relationship="ClarityContext.UserDashboardConfig" FromRole="DashboardConfig" ToRole="User" />
+        </EntityType>
+        <Association Name="UserDashboardConfig">
+          <End Type="ClarityContext.User" Role="User" Multiplicity="1" />
+          <End Type="ClarityContext.DashboardConfig" Role="DashboardConfig" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="OrganizationSettings">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="organization" Relationship="ClarityContext.OrganizationOrganizationSettings" FromRole="OrganizationSettings" ToRole="Organization" />
+          <Property Name="deposits_feed" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="demographics_feed" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="alegeus_feed" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="feed_logs" Relationship="ClarityContext.OrganizationSettingsFeedLog" FromRole="OrganizationSettings" ToRole="FeedLog" />
+          <Property Name="withhold_entire_balance" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="repayment_table" Relationship="ClarityContext.RateTableOrganizationSettings" FromRole="OrganizationSettings" ToRole="RateTable" />
+        </EntityType>
+        <Association Name="OrganizationOrganizationSettings">
+          <End Type="ClarityContext.Organization" Role="Organization" Multiplicity="1" />
+          <End Type="ClarityContext.OrganizationSettings" Role="OrganizationSettings" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="organization" Relationship="ClarityContext.OrganizationReport" FromRole="Report" ToRole="Organization" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="grouping_field" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="show_totals" Type="Boolean" Nullable="false" />
+          <Property Name="show_subtotals" Type="Boolean" Nullable="false" />
+          <Property Name="output_format" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="delivery_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="schedule_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="custom_report_schedules" Relationship="ClarityContext.ReportCustomReportSchedule" FromRole="Report" ToRole="CustomReportSchedule" />
+          <NavigationProperty Name="fields" Relationship="ClarityContext.ReportReportField" FromRole="Report" ToRole="ReportField" />
+          <Property Name="delivery_email_address" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="delivery_ftp_address" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="delivery_ftp_username" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="delivery_ftp_password" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="delivery_ftp_port" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="delivery_ftp_path" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="report_entities" Relationship="ClarityContext.ReportReportEntity" FromRole="Report" ToRole="ReportEntity" />
+          <Property Name="is_report_builder" Type="Boolean" Nullable="false" DefaultValue="false" />
+          <Property Name="global_report_orgs" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="header" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="footer" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="report_field_changes" Relationship="ClarityContext.ReportReportFieldChange" FromRole="Report" ToRole="ReportFieldChange" />
+          <Property Name="xml_file_path" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="report_834_options" Relationship="ClarityContext.ReportReport834Options" FromRole="Report" ToRole="Report834Options" />
+          <Property Name="output_filename" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="terminations" Relationship="ClarityContext.ReportTermination" FromRole="Report" ToRole="Termination" />
+        </EntityType>
+        <Association Name="OrganizationReport">
+          <End Type="ClarityContext.Organization" Role="Organization" Multiplicity="0..1" />
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="*" />
+        </Association>
+        <EntityType Name="CustomReportSchedule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="month" Type="Int32" Nullable="false" />
+          <Property Name="day" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="report" Relationship="ClarityContext.ReportCustomReportSchedule" FromRole="CustomReportSchedule" ToRole="Report" />
+          <Property Name="recurrence" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="start_date" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <Association Name="ReportCustomReportSchedule">
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="1" />
+          <End Type="ClarityContext.CustomReportSchedule" Role="CustomReportSchedule" Multiplicity="*" />
+        </Association>
+        <EntityType Name="ReportField">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="report" Relationship="ClarityContext.ReportReportField" FromRole="ReportField" ToRole="Report" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="source" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="format" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="field_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="calculation" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="field_order" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="field" Relationship="ClarityContext.FieldReportField" FromRole="ReportField" ToRole="Field" />
+        </EntityType>
+        <Association Name="ReportReportField">
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="1" />
+          <End Type="ClarityContext.ReportField" Role="ReportField" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Field">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="source" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="field_key" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="field_format" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="report_fields" Relationship="ClarityContext.FieldReportField" FromRole="Field" ToRole="ReportField" />
+        </EntityType>
+        <Association Name="FieldReportField">
+          <End Type="ClarityContext.Field" Role="Field" Multiplicity="1" />
+          <End Type="ClarityContext.ReportField" Role="ReportField" Multiplicity="*" />
+        </Association>
+        <Association Name="DemographicDeposit">
+          <End Type="ClarityContext.Demographic" Role="Demographic" Multiplicity="1" />
+          <End Type="ClarityContext.Deposit" Role="Deposit" Multiplicity="*" />
+        </Association>
+        <EntityType Name="FeedLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="organization_setting" Relationship="ClarityContext.OrganizationSettingsFeedLog" FromRole="FeedLog" ToRole="OrganizationSettings" />
+          <Property Name="feed_timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="feed_name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="feed_direction" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="feed_location" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="successful" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="feed_log_details" Relationship="ClarityContext.FeedLogFeedLogDetail" FromRole="FeedLog" ToRole="FeedLogDetail" />
+        </EntityType>
+        <Association Name="OrganizationSettingsFeedLog">
+          <End Type="ClarityContext.OrganizationSettings" Role="OrganizationSettings" Multiplicity="1" />
+          <End Type="ClarityContext.FeedLog" Role="FeedLog" Multiplicity="*" />
+        </Association>
+        <EntityType Name="RepaymentTable">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="organization_settings" ToRole="OrganizationSettings" FromRole="RateTable" Relationship="ClarityContext.RateTableOrganizationSettings" />
+          <Property Name="loan_amount_min" Type="Double" Nullable="false" />
+          <Property Name="loan_amount_max" Type="Double" Nullable="false" />
+          <Property Name="repaymant_amount" Type="Double" Nullable="false" />
+        </EntityType>
+        <Association Name="RateTableOrganizationSettings">
+          <End Type="ClarityContext.RepaymentTable" Role="RateTable" Multiplicity="*" />
+          <End Type="ClarityContext.OrganizationSettings" Role="OrganizationSettings" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Loan">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="charges" Relationship="ClarityContext.LoanCharge" FromRole="Loan" ToRole="Charge" />
+          <NavigationProperty Name="employee" Relationship="ClarityContext.DemographicLoan" FromRole="Loan" ToRole="Demographic" />
+          <Property Name="loan_id" Type="Guid" Nullable="false" />
+          <Property Name="balance" Type="Double" Nullable="false" />
+          <Property Name="monthly_payment" Type="Double" Nullable="false" />
+          <Property Name="last_payment_date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <Association Name="LoanCharge">
+          <End Type="ClarityContext.Loan" Role="Loan" Multiplicity="0..1" />
+          <End Type="ClarityContext.Charge" Role="Charge" Multiplicity="*" />
+        </Association>
+        <Association Name="DemographicLoan">
+          <End Type="ClarityContext.Demographic" Role="Demographic" Multiplicity="1" />
+          <End Type="ClarityContext.Loan" Role="Loan" Multiplicity="*" />
+        </Association>
+        <EntityType Name="AvailableEntity">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="entity_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="valid_parent_type" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="available_entity_options" Relationship="ClarityContext.AvailableEntityEntityOption" FromRole="AvailableEntity" ToRole="EntityOption" />
+          <NavigationProperty Name="report_entities" Relationship="ClarityContext.AvailableEntityReportEntity" FromRole="AvailableEntity" ToRole="ReportEntity" />
+        </EntityType>
+        <EntityType Name="AvailableEntityOption">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="option_string" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="available_entity" Relationship="ClarityContext.AvailableEntityEntityOption" FromRole="EntityOption" ToRole="AvailableEntity" />
+          <NavigationProperty Name="entity_options" Relationship="ClarityContext.AvailableEntityOptionEntityOption" FromRole="AvailableEntityOption" ToRole="EntityOption" />
+        </EntityType>
+        <Association Name="AvailableEntityEntityOption">
+          <End Type="ClarityContext.AvailableEntity" Role="AvailableEntity" Multiplicity="1" />
+          <End Type="ClarityContext.AvailableEntityOption" Role="EntityOption" Multiplicity="*" />
+        </Association>
+        <EntityType Name="ReportEntity">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="available_entity" Relationship="ClarityContext.AvailableEntityReportEntity" FromRole="ReportEntity" ToRole="AvailableEntity" />
+          <NavigationProperty Name="report" Relationship="ClarityContext.ReportReportEntity" FromRole="ReportEntity" ToRole="Report" />
+          <NavigationProperty Name="entity_options" Relationship="ClarityContext.ReportEntityEntityOption" FromRole="ReportEntity" ToRole="EntityOption" />
+          <Property Name="indentation_level" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="caption" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="format" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="literal_value" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="child_entities" Relationship="ClarityContext.ReportEntityReportEntity" FromRole="ReportEntity" ToRole="ReportEntity1" />
+          <NavigationProperty Name="parent_entities" Relationship="ClarityContext.ReportEntityReportEntity" FromRole="ReportEntity1" ToRole="ReportEntity" />
+          <Property Name="option" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="section_delimiter" Type="String" Nullable="false" DefaultValue="," MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="format_json" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="map_json" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="format_option_fixed_width" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="format_option_fixed_width_val" Type="Int32" Nullable="true" />
+          <Property Name="format_option_capitalize_entire_element" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="format_option_remove_characters" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="format_option_remove_characters_list" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="format_option_date" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="format_option_date_format" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="format_option_currency" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="format_option_currency_format" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="collapsed" Type="Boolean" Nullable="false" DefaultValue="false" />
+        </EntityType>
+        <Association Name="AvailableEntityReportEntity">
+          <End Type="ClarityContext.AvailableEntity" Role="AvailableEntity" Multiplicity="1" />
+          <End Type="ClarityContext.ReportEntity" Role="ReportEntity" Multiplicity="*" />
+        </Association>
+        <Association Name="ReportReportEntity">
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="1" />
+          <End Type="ClarityContext.ReportEntity" Role="ReportEntity" Multiplicity="*" />
+        </Association>
+        <EntityType Name="EntityOption">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="report_entity" Relationship="ClarityContext.ReportEntityEntityOption" FromRole="EntityOption" ToRole="ReportEntity" />
+          <NavigationProperty Name="available_entity_option" Relationship="ClarityContext.AvailableEntityOptionEntityOption" FromRole="EntityOption" ToRole="AvailableEntityOption" />
+          <Property Name="option_value" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <Association Name="ReportEntityEntityOption">
+          <End Type="ClarityContext.ReportEntity" Role="ReportEntity" Multiplicity="1" />
+          <End Type="ClarityContext.EntityOption" Role="EntityOption" Multiplicity="*" />
+        </Association>
+        <Association Name="AvailableEntityOptionEntityOption">
+          <End Type="ClarityContext.AvailableEntityOption" Role="AvailableEntityOption" Multiplicity="1" />
+          <End Type="ClarityContext.EntityOption" Role="EntityOption" Multiplicity="*" />
+        </Association>
+        <Association Name="ReportEntityReportEntity">
+          <End Type="ClarityContext.ReportEntity" Role="ReportEntity" Multiplicity="0..1" />
+          <End Type="ClarityContext.ReportEntity" Role="ReportEntity1" Multiplicity="*" />
+        </Association>
+        <EntityType Name="ReportFieldChange">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="report" Relationship="ClarityContext.ReportReportFieldChange" FromRole="ReportFieldChange" ToRole="Report" />
+          <Property Name="field_name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="field_value" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="unique_identifier" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="record_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <Association Name="ReportReportFieldChange">
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="1" />
+          <End Type="ClarityContext.ReportFieldChange" Role="ReportFieldChange" Multiplicity="*" />
+        </Association>
+        <EntityType Name="FeedLogDetail">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="feed_log" Relationship="ClarityContext.FeedLogFeedLogDetail" FromRole="FeedLogDetail" ToRole="FeedLog" />
+          <Property Name="log_message" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="message_timestamp" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <Association Name="FeedLogFeedLogDetail">
+          <End Type="ClarityContext.FeedLog" Role="FeedLog" Multiplicity="1" />
+          <End Type="ClarityContext.FeedLogDetail" Role="FeedLogDetail" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Report834Options">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="report" Relationship="ClarityContext.ReportReport834Options" FromRole="Report834Options" ToRole="Report" />
+          <Property Name="isa02" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa03" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa04" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa05" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa06" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa07" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa08" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa13" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa14" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="gs02" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="gs03" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="gs06" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="gs08" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="bgn02" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="bgn08" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="st02" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="dtp03" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa01" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="isa15" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="bgn06" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ref02" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="dtp01" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n102a" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n103a" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n104a" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n102b" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n103b" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n104b" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n102c" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n103c" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="n104c" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="dtp01b" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="dtp03b" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="include_qty_a" Type="Int32" Nullable="false" />
+          <Property Name="include_qty_b" Type="Int32" Nullable="false" />
+          <Property Name="include_qty_c" Type="Int32" Nullable="false" />
+          <Property Name="include_n1_a" Type="Int32" Nullable="false" />
+          <Property Name="include_n1_b" Type="Int32" Nullable="false" />
+          <Property Name="include_n1_c" Type="Int32" Nullable="false" />
+          <Property Name="include_dtp_a" Type="Int32" Nullable="false" />
+          <Property Name="include_dtp_b" Type="Int32" Nullable="false" />
+          <Property Name="remove_line_breaks" Type="Boolean" Nullable="false" />
+          <Property Name="remove_tildes" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="ReportReport834Options">
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="1" />
+          <End Type="ClarityContext.Report834Options" Role="Report834Options" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="CronLog">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cron_timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="cron_type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="cron_log" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Termination">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employee_key" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="report" Relationship="ClarityContext.ReportTermination" FromRole="Termination" ToRole="Report" />
+        </EntityType>
+        <Association Name="ReportTermination">
+          <End Type="ClarityContext.Report" Role="Report" Multiplicity="1" />
+          <End Type="ClarityContext.Termination" Role="Termination" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ClarityContextStoreContainer" CdmEntityContainer="ClarityContextContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.User)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="password" ColumnName="password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Organizations">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Organization)">
+        <MappingFragment StoreEntitySet="Organizations">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="logo_url" ColumnName="logo_url" />
+          <ScalarProperty Name="color_1" ColumnName="color_1" />
+          <ScalarProperty Name="color_2" ColumnName="color_2" />
+          <ScalarProperty Name="company_id" ColumnName="company_id" />
+          <ScalarProperty Name="payroll_id" ColumnName="payroll_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Role)">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="access_level" ColumnName="access_level" />
+          <ScalarProperty Name="role_type" ColumnName="role_type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Demographics">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Demographic)">
+        <MappingFragment StoreEntitySet="Demographics">
+                <ScalarProperty Name="company_payroll_identifier" ColumnName="company_payroll_identifier" />
+                <ScalarProperty Name="goal" ColumnName="goal" />
+                <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="dob" ColumnName="dob" />
+          <ScalarProperty Name="social_security_num" ColumnName="social_security_num" />
+          <ScalarProperty Name="social_security_last_four" ColumnName="social_security_last_four" />
+          <ScalarProperty Name="address" ColumnName="address" />
+          <ScalarProperty Name="city" ColumnName="city" />
+          <ScalarProperty Name="state" ColumnName="state" />
+          <ScalarProperty Name="zip" ColumnName="zip" />
+          <ScalarProperty Name="country" ColumnName="country" />
+          <ScalarProperty Name="company_identifier" ColumnName="company_identifier" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="balance" ColumnName="balance" />
+          <ScalarProperty Name="monthly_payment" ColumnName="monthly_payment" />
+          <ScalarProperty Name="terminated" ColumnName="terminated" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="maximum_advance_amount" ColumnName="maximum_advance_amount" />
+          <ScalarProperty Name="hsa_balance" ColumnName="hsa_balance" />
+          <ScalarProperty Name="payroll_identifier" ColumnName="payroll_identifier" />
+          <ScalarProperty Name="termination_date" ColumnName="termination_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Charges">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Charge)">
+        <MappingFragment StoreEntitySet="Charges">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="transaction_date" ColumnName="transaction_date" />
+          <ScalarProperty Name="claim_type" ColumnName="claim_type" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="total_claim_amount" ColumnName="total_claim_amount" />
+          <ScalarProperty Name="eligible_amount" ColumnName="eligible_amount" />
+          <ScalarProperty Name="approved_amount" ColumnName="approved_amount" />
+          <ScalarProperty Name="ineligible_amount" ColumnName="ineligible_amount" />
+          <ScalarProperty Name="pended_amount" ColumnName="pended_amount" />
+          <ScalarProperty Name="denied_amount" ColumnName="denied_amount" />
+          <ScalarProperty Name="denied_reason" ColumnName="denied_reason" />
+          <ScalarProperty Name="claim_number" ColumnName="claim_number" />
+          <ScalarProperty Name="scc_mcc" ColumnName="scc_mcc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Deposits">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Deposit)">
+        <MappingFragment StoreEntitySet="Deposits">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="payroll_date" ColumnName="payroll_date" />
+          <ScalarProperty Name="employee_contribution" ColumnName="employee_contribution" />
+          <ScalarProperty Name="employer_contribution" ColumnName="employer_contribution" />
+          <ScalarProperty Name="loan_remaining_balance" ColumnName="loan_remaining_balance" />
+          <ScalarProperty Name="plan_type" ColumnName="plan_type" />
+          <ScalarProperty Name="plan_begin" ColumnName="plan_begin" />
+          <ScalarProperty Name="plan_end" ColumnName="plan_end" />
+          <ScalarProperty Name="deposit_type" ColumnName="deposit_type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DashboardConfigs">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.DashboardConfig)">
+        <MappingFragment StoreEntitySet="DashboardConfigs">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="quadrant_1" ColumnName="quadrant_1" />
+          <ScalarProperty Name="quadrant_2" ColumnName="quadrant_2" />
+          <ScalarProperty Name="quadrant_3" ColumnName="quadrant_3" />
+          <ScalarProperty Name="quadrant_4" ColumnName="quadrant_4" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OrganizationSettings">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.OrganizationSettings)">
+        <MappingFragment StoreEntitySet="OrganizationSettings">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="deposits_feed" ColumnName="deposits_feed" />
+          <ScalarProperty Name="demographics_feed" ColumnName="demographics_feed" />
+          <ScalarProperty Name="alegeus_feed" ColumnName="alegeus_feed" />
+          <ScalarProperty Name="withhold_entire_balance" ColumnName="withhold_entire_balance" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reports">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Report)">
+        <MappingFragment StoreEntitySet="Reports">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="grouping_field" ColumnName="grouping_field" />
+          <ScalarProperty Name="show_totals" ColumnName="show_totals" />
+          <ScalarProperty Name="show_subtotals" ColumnName="show_subtotals" />
+          <ScalarProperty Name="output_format" ColumnName="output_format" />
+          <ScalarProperty Name="delivery_type" ColumnName="delivery_type" />
+          <ScalarProperty Name="schedule_type" ColumnName="schedule_type" />
+          <ScalarProperty Name="delivery_email_address" ColumnName="delivery_email_address" />
+          <ScalarProperty Name="delivery_ftp_address" ColumnName="delivery_ftp_address" />
+          <ScalarProperty Name="delivery_ftp_username" ColumnName="delivery_ftp_username" />
+          <ScalarProperty Name="delivery_ftp_password" ColumnName="delivery_ftp_password" />
+          <ScalarProperty Name="delivery_ftp_port" ColumnName="delivery_ftp_port" />
+          <ScalarProperty Name="delivery_ftp_path" ColumnName="delivery_ftp_path" />
+          <ScalarProperty Name="is_report_builder" ColumnName="is_report_builder" />
+          <ScalarProperty Name="global_report_orgs" ColumnName="global_report_orgs" />
+          <ScalarProperty Name="header" ColumnName="header" />
+          <ScalarProperty Name="footer" ColumnName="footer" />
+          <ScalarProperty Name="xml_file_path" ColumnName="xml_file_path" />
+          <ScalarProperty Name="output_filename" ColumnName="output_filename" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomReportSchedules">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.CustomReportSchedule)">
+        <MappingFragment StoreEntitySet="CustomReportSchedules">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="month" ColumnName="month" />
+          <ScalarProperty Name="day" ColumnName="day" />
+          <ScalarProperty Name="recurrence" ColumnName="recurrence" />
+          <ScalarProperty Name="start_date" ColumnName="start_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReportFields">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.ReportField)">
+        <MappingFragment StoreEntitySet="ReportFields">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="source" ColumnName="source" />
+          <ScalarProperty Name="format" ColumnName="format" />
+          <ScalarProperty Name="field_type" ColumnName="field_type" />
+          <ScalarProperty Name="calculation" ColumnName="calculation" />
+          <ScalarProperty Name="field_order" ColumnName="field_order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Fields">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Field)">
+        <MappingFragment StoreEntitySet="Fields">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="source" ColumnName="source" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="field_key" ColumnName="field_key" />
+          <ScalarProperty Name="field_format" ColumnName="field_format" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FeedLogs">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.FeedLog)">
+        <MappingFragment StoreEntitySet="FeedLogs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="feed_timestamp" ColumnName="feed_timestamp" />
+          <ScalarProperty Name="feed_name" ColumnName="feed_name" />
+          <ScalarProperty Name="feed_direction" ColumnName="feed_direction" />
+          <ScalarProperty Name="feed_location" ColumnName="feed_location" />
+          <ScalarProperty Name="successful" ColumnName="successful" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RepaymentTables">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.RepaymentTable)">
+        <MappingFragment StoreEntitySet="RepaymentTables">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="loan_amount_min" ColumnName="loan_amount_min" />
+          <ScalarProperty Name="loan_amount_max" ColumnName="loan_amount_max" />
+          <ScalarProperty Name="repaymant_amount" ColumnName="repaymant_amount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Loans">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Loan)">
+        <MappingFragment StoreEntitySet="Loans">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="loan_id" ColumnName="loan_id" />
+          <ScalarProperty Name="balance" ColumnName="balance" />
+          <ScalarProperty Name="monthly_payment" ColumnName="monthly_payment" />
+          <ScalarProperty Name="last_payment_date" ColumnName="last_payment_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AvailableEntities">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.AvailableEntity)">
+        <MappingFragment StoreEntitySet="AvailableEntities">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="entity_type" ColumnName="entity_type" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="valid_parent_type" ColumnName="valid_parent_type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AvailableEntityOptions">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.AvailableEntityOption)">
+        <MappingFragment StoreEntitySet="AvailableEntityOptions">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="option_string" ColumnName="option_string" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReportEntities">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.ReportEntity)">
+        <MappingFragment StoreEntitySet="ReportEntities">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="indentation_level" ColumnName="indentation_level" />
+          <ScalarProperty Name="caption" ColumnName="caption" />
+          <ScalarProperty Name="format" ColumnName="format" />
+          <ScalarProperty Name="literal_value" ColumnName="literal_value" />
+          <ScalarProperty Name="option" ColumnName="option" />
+          <ScalarProperty Name="section_delimiter" ColumnName="section_delimiter" />
+          <ScalarProperty Name="format_json" ColumnName="format_json" />
+          <ScalarProperty Name="map_json" ColumnName="map_json" />
+          <ScalarProperty Name="format_option_fixed_width" ColumnName="format_option_fixed_width" />
+          <ScalarProperty Name="format_option_fixed_width_val" ColumnName="format_option_fixed_width_val" />
+          <ScalarProperty Name="format_option_capitalize_entire_element" ColumnName="format_option_capitalize_entire_element" />
+          <ScalarProperty Name="format_option_remove_characters" ColumnName="format_option_remove_characters" />
+          <ScalarProperty Name="format_option_remove_characters_list" ColumnName="format_option_remove_characters_list" />
+          <ScalarProperty Name="format_option_date" ColumnName="format_option_date" />
+          <ScalarProperty Name="format_option_date_format" ColumnName="format_option_date_format" />
+          <ScalarProperty Name="format_option_currency" ColumnName="format_option_currency" />
+          <ScalarProperty Name="format_option_currency_format" ColumnName="format_option_currency_format" />
+          <ScalarProperty Name="collapsed" ColumnName="collapsed" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EntityOptions">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.EntityOption)">
+        <MappingFragment StoreEntitySet="EntityOptions">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="option_value" ColumnName="option_value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReportFieldChanges">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.ReportFieldChange)">
+        <MappingFragment StoreEntitySet="ReportFieldChanges">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="field_name" ColumnName="field_name" />
+          <ScalarProperty Name="field_value" ColumnName="field_value" />
+          <ScalarProperty Name="unique_identifier" ColumnName="unique_identifier" />
+          <ScalarProperty Name="record_type" ColumnName="record_type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FeedLogDetails">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.FeedLogDetail)">
+        <MappingFragment StoreEntitySet="FeedLogDetails">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="log_message" ColumnName="log_message" />
+          <ScalarProperty Name="message_timestamp" ColumnName="message_timestamp" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Report834Options">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Report834Options)">
+        <MappingFragment StoreEntitySet="Report834Options">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="isa02" ColumnName="isa02" />
+          <ScalarProperty Name="isa03" ColumnName="isa03" />
+          <ScalarProperty Name="isa04" ColumnName="isa04" />
+          <ScalarProperty Name="isa05" ColumnName="isa05" />
+          <ScalarProperty Name="isa06" ColumnName="isa06" />
+          <ScalarProperty Name="isa07" ColumnName="isa07" />
+          <ScalarProperty Name="isa08" ColumnName="isa08" />
+          <ScalarProperty Name="isa13" ColumnName="isa13" />
+          <ScalarProperty Name="isa14" ColumnName="isa14" />
+          <ScalarProperty Name="gs02" ColumnName="gs02" />
+          <ScalarProperty Name="gs03" ColumnName="gs03" />
+          <ScalarProperty Name="gs06" ColumnName="gs06" />
+          <ScalarProperty Name="gs08" ColumnName="gs08" />
+          <ScalarProperty Name="bgn02" ColumnName="bgn02" />
+          <ScalarProperty Name="bgn08" ColumnName="bgn08" />
+          <ScalarProperty Name="st02" ColumnName="st02" />
+          <ScalarProperty Name="dtp03" ColumnName="dtp03" />
+          <ScalarProperty Name="isa01" ColumnName="isa01" />
+          <ScalarProperty Name="isa15" ColumnName="isa15" />
+          <ScalarProperty Name="bgn06" ColumnName="bgn06" />
+          <ScalarProperty Name="ref02" ColumnName="ref02" />
+          <ScalarProperty Name="dtp01" ColumnName="dtp01" />
+          <ScalarProperty Name="n102a" ColumnName="n102a" />
+          <ScalarProperty Name="n103a" ColumnName="n103a" />
+          <ScalarProperty Name="n104a" ColumnName="n104a" />
+          <ScalarProperty Name="n102b" ColumnName="n102b" />
+          <ScalarProperty Name="n103b" ColumnName="n103b" />
+          <ScalarProperty Name="n104b" ColumnName="n104b" />
+          <ScalarProperty Name="n102c" ColumnName="n102c" />
+          <ScalarProperty Name="n103c" ColumnName="n103c" />
+          <ScalarProperty Name="n104c" ColumnName="n104c" />
+          <ScalarProperty Name="dtp01b" ColumnName="dtp01b" />
+          <ScalarProperty Name="dtp03b" ColumnName="dtp03b" />
+          <ScalarProperty Name="include_qty_a" ColumnName="include_qty_a" />
+          <ScalarProperty Name="include_qty_b" ColumnName="include_qty_b" />
+          <ScalarProperty Name="include_qty_c" ColumnName="include_qty_c" />
+          <ScalarProperty Name="include_n1_a" ColumnName="include_n1_a" />
+          <ScalarProperty Name="include_n1_b" ColumnName="include_n1_b" />
+          <ScalarProperty Name="include_n1_c" ColumnName="include_n1_c" />
+          <ScalarProperty Name="include_dtp_a" ColumnName="include_dtp_a" />
+          <ScalarProperty Name="include_dtp_b" ColumnName="include_dtp_b" />
+          <ScalarProperty Name="remove_line_breaks" ColumnName="remove_line_breaks" />
+          <ScalarProperty Name="remove_tildes" ColumnName="remove_tildes" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CronLogs">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.CronLog)">
+        <MappingFragment StoreEntitySet="CronLogs">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="cron_timestamp" ColumnName="cron_timestamp" />
+          <ScalarProperty Name="cron_type" ColumnName="cron_type" />
+          <ScalarProperty Name="cron_log" ColumnName="cron_log" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Terminations">
+      <EntityTypeMapping TypeName="IsTypeOf(ClarityContext.Termination)">
+        <MappingFragment StoreEntitySet="Terminations">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UserRole" TypeName="ClarityContext.UserRole" StoreEntitySet="Roles">
+      <EndProperty Name="User">
+        <ScalarProperty Name="id" ColumnName="user_id" />
+      </EndProperty>
+      <EndProperty Name="Role">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OrganizationRole" TypeName="ClarityContext.OrganizationRole" StoreEntitySet="Roles">
+      <EndProperty Name="Organization">
+        <ScalarProperty Name="id" ColumnName="organization_id" />
+      </EndProperty>
+      <EndProperty Name="Role">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OrganizationOrganization" TypeName="ClarityContext.OrganizationOrganization" StoreEntitySet="Organizations">
+      <EndProperty Name="Organization">
+        <ScalarProperty Name="id" ColumnName="parent_organization_id" />
+      </EndProperty>
+      <EndProperty Name="Organization1">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+      <Condition ColumnName="parent_organization_id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="EmployeeUser" TypeName="ClarityContext.EmployeeUser" StoreEntitySet="Users">
+      <EndProperty Name="Employee">
+        <ScalarProperty Name="id" ColumnName="employee_id" />
+      </EndProperty>
+      <EndProperty Name="User">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+      <Condition ColumnName="employee_id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="EmployeeLoan" TypeName="ClarityContext.EmployeeLoan" StoreEntitySet="Charges">
+      <EndProperty Name="Employee">
+        <ScalarProperty Name="id" ColumnName="employee_id" />
+      </EndProperty>
+      <EndProperty Name="Loan">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserDashboardConfig" TypeName="ClarityContext.UserDashboardConfig" StoreEntitySet="DashboardConfigs">
+      <EndProperty Name="User">
+        <ScalarProperty Name="id" ColumnName="user_id" />
+      </EndProperty>
+      <EndProperty Name="DashboardConfig">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OrganizationOrganizationSettings" TypeName="ClarityContext.OrganizationOrganizationSettings" StoreEntitySet="OrganizationSettings">
+      <EndProperty Name="Organization">
+        <ScalarProperty Name="id" ColumnName="organization_id" />
+      </EndProperty>
+      <EndProperty Name="OrganizationSettings">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OrganizationReport" TypeName="ClarityContext.OrganizationReport" StoreEntitySet="Reports">
+      <EndProperty Name="Organization">
+        <ScalarProperty Name="id" ColumnName="organization_id" />
+      </EndProperty>
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+      <Condition ColumnName="organization_id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportCustomReportSchedule" TypeName="ClarityContext.ReportCustomReportSchedule" StoreEntitySet="CustomReportSchedules">
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="report_id" />
+      </EndProperty>
+      <EndProperty Name="CustomReportSchedule">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportReportField" TypeName="ClarityContext.ReportReportField" StoreEntitySet="ReportFields">
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="report_id" />
+      </EndProperty>
+      <EndProperty Name="ReportField">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FieldReportField" TypeName="ClarityContext.FieldReportField" StoreEntitySet="ReportFields">
+      <EndProperty Name="Field">
+        <ScalarProperty Name="id" ColumnName="field_id" />
+      </EndProperty>
+      <EndProperty Name="ReportField">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DemographicDeposit" TypeName="ClarityContext.DemographicDeposit" StoreEntitySet="Deposits">
+      <EndProperty Name="Demographic">
+        <ScalarProperty Name="id" ColumnName="employee_id" />
+      </EndProperty>
+      <EndProperty Name="Deposit">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OrganizationSettingsFeedLog" TypeName="ClarityContext.OrganizationSettingsFeedLog" StoreEntitySet="FeedLogs">
+      <EndProperty Name="OrganizationSettings">
+        <ScalarProperty Name="id" ColumnName="organization_setting_id" />
+      </EndProperty>
+      <EndProperty Name="FeedLog">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RateTableOrganizationSettings" TypeName="ClarityContext.RateTableOrganizationSettings" StoreEntitySet="RepaymentTables">
+      <EndProperty Name="OrganizationSettings">
+        <ScalarProperty Name="id" ColumnName="organization_settings_id" />
+      </EndProperty>
+      <EndProperty Name="RateTable">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LoanCharge" TypeName="ClarityContext.LoanCharge" StoreEntitySet="Charges">
+      <EndProperty Name="Loan">
+        <ScalarProperty Name="id" ColumnName="loan_id" />
+      </EndProperty>
+      <EndProperty Name="Charge">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+      <Condition ColumnName="loan_id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DemographicLoan" TypeName="ClarityContext.DemographicLoan" StoreEntitySet="Loans">
+      <EndProperty Name="Demographic">
+        <ScalarProperty Name="id" ColumnName="employee_id" />
+      </EndProperty>
+      <EndProperty Name="Loan">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AvailableEntityEntityOption" TypeName="ClarityContext.AvailableEntityEntityOption" StoreEntitySet="AvailableEntityOptions">
+      <EndProperty Name="AvailableEntity">
+        <ScalarProperty Name="id" ColumnName="available_entity_id" />
+      </EndProperty>
+      <EndProperty Name="EntityOption">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AvailableEntityReportEntity" TypeName="ClarityContext.AvailableEntityReportEntity" StoreEntitySet="ReportEntities">
+      <EndProperty Name="AvailableEntity">
+        <ScalarProperty Name="id" ColumnName="available_entity_id" />
+      </EndProperty>
+      <EndProperty Name="ReportEntity">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportReportEntity" TypeName="ClarityContext.ReportReportEntity" StoreEntitySet="ReportEntities">
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="report_id" />
+      </EndProperty>
+      <EndProperty Name="ReportEntity">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportEntityEntityOption" TypeName="ClarityContext.ReportEntityEntityOption" StoreEntitySet="EntityOptions">
+      <EndProperty Name="ReportEntity">
+        <ScalarProperty Name="id" ColumnName="report_entity_id" />
+      </EndProperty>
+      <EndProperty Name="EntityOption">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AvailableEntityOptionEntityOption" TypeName="ClarityContext.AvailableEntityOptionEntityOption" StoreEntitySet="EntityOptions">
+      <EndProperty Name="AvailableEntityOption">
+        <ScalarProperty Name="id" ColumnName="available_entity_option_id" />
+      </EndProperty>
+      <EndProperty Name="EntityOption">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportEntityReportEntity" TypeName="ClarityContext.ReportEntityReportEntity" StoreEntitySet="ReportEntities">
+      <EndProperty Name="ReportEntity">
+        <ScalarProperty Name="id" ColumnName="parent_entities_id" />
+      </EndProperty>
+      <EndProperty Name="ReportEntity1">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+      <Condition ColumnName="parent_entities_id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportReportFieldChange" TypeName="ClarityContext.ReportReportFieldChange" StoreEntitySet="ReportFieldChanges">
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="report_id" />
+      </EndProperty>
+      <EndProperty Name="ReportFieldChange">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FeedLogFeedLogDetail" TypeName="ClarityContext.FeedLogFeedLogDetail" StoreEntitySet="FeedLogDetails">
+      <EndProperty Name="FeedLog">
+        <ScalarProperty Name="Id" ColumnName="feed_log_Id" />
+      </EndProperty>
+      <EndProperty Name="FeedLogDetail">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportReport834Options" TypeName="ClarityContext.ReportReport834Options" StoreEntitySet="Report834Options">
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="report_id" />
+      </EndProperty>
+      <EndProperty Name="Report834Options">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReportTermination" TypeName="ClarityContext.ReportTermination" StoreEntitySet="Terminations">
+      <EndProperty Name="Report">
+        <ScalarProperty Name="id" ColumnName="report_id" />
+      </EndProperty>
+      <EndProperty Name="Termination">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

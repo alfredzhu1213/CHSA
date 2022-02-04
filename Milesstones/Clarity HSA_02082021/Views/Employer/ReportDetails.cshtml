@@ -1,0 +1,574 @@
+﻿
+@{
+    ViewBag.Title = "Report Details";
+
+    var report = (Clarity_HSA.Models.Report)@ViewData["report"];
+    var fields = (Clarity_HSA.Models.Field[])@ViewData["fields"];
+    var contacts = (Clarity_HSA.Models.Role[])@ViewData["contacts"];
+}
+
+<h3>Edit Report</h3>
+
+<br />
+<input type="text" class="form-control" value="@report.name" placeholder="Report Name" />
+<br />
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Fields</a></li>
+        <li role="presentation"><a href="#grouping" aria-controls="grouping" role="tab" data-toggle="tab">Grouping and Totals</a></li>
+        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Format and Delivery Type</a></li>
+        <li role="presentation"><a href="#scheduling" aria-controls="scheduling" role="tab" data-toggle="tab">Scheduling</a></li>
+        @if (report.organization == null)
+        {
+            <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">Global Report Access</a></li>
+        }
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home" style="padding:20px;">
+        <br />
+        <table class="table table-bordered table-striped table-hover">
+            <tr>
+                <th>Field Name</th>
+                <th>Field Source</th>
+                <th>Field Format</th>
+                <th>Field Type</th>
+                <th>Calculation</th>
+                <th>Actions</th>
+            </tr>
+            @foreach (Clarity_HSA.Models.ReportField field in report.fields)
+            {
+                <tr>
+                    <td style="min-width:230px;">
+                        <form action="/Employer/UpdateFieldName" method="post">
+                            <input type="hidden" name="report_id" value="@report.id" />
+                            <input type="hidden" name="field_id" value="@field.id" />
+                            <input type="text" class="form-control" name="field_name" value="@field.name" style="display:inline; max-width:200px;" />
+                            <input type="submit" class="btn btn-primary btn-sm" value="Update" />
+                        </form>
+                    </td>
+                    <td>
+                        @if (field.field_type == "Calculated")
+                        {
+                            <span>Calculated</span>
+                        }
+                        else
+                        {
+                            <span>@field.field.source:<br />@field.field.name</span>
+                        }
+                    </td>
+                    <td style="min-width:230px;">
+                        @if (field.field_type == "Calculated")
+                        {
+                            <form action="/Employer/UpdateFieldFormat" method="post">
+                                <input type="hidden" name="report_id" value="@report.id" />
+                                <input type="hidden" name="field_id" value="@field.id" />
+                                <select class="form-control" name="field_format" style="display:inline; max-width:200px;">
+                                    @if (field.format == "String")
+                                    {
+                                        <option value="String" selected="selected">String</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="String">String</option>
+                                    }
+                                    @if (field.format == "Numeric")
+                                    {
+                                        <option value="Numeric" selected="selected">Numeric</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Numeric">Numeric</option>
+                                    }
+                                    @if (field.format == "Currency")
+                                    {
+                                        <option value="Currency" selected="selected">Currency</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Currency">Currency</option>
+                                    }
+                                </select>
+                                <input type="submit" class="btn btn-primary btn-sm" value="Update" />
+                            </form>
+                        }
+                        else
+                        {
+                            <span>@field.field.field_format</span>
+                        }
+                    </td>
+                    <td>@field.field_type</td>
+                    <td style="min-width:250px;">
+                        @if (field.field_type == "Calculated")
+                        {
+                            <form action="/Employer/UpdateCalculation" method="post">
+                                <input type="hidden" name="report_id" value="@report.id" />
+                                <input type="hidden" name="field_id" value="@field.id" />
+                                <input type="text" class="form-control" name="calculation" value="@field.calculation" style="display:inline; max-width:220px;" />
+                                <input type="submit" class="btn btn-primary btn-sm" value="Update" />
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#edit_field_modal_@field.id">Edit</a>
+                        <a href="/Employer/ReportFieldDelete/@field.id" class="btn btn-danger">Delete</a>
+                        <div class="modal fade" tabindex="-1" role="dialog" id="edit_field_modal_@field.id">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form action="/Employer/UpdateField" method="post">
+                                        <input type="hidden" name="report_id" value="@report.id" />
+                                        <input type="hidden" name="field_id" value="@field.id" />
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">Add Field</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table">
+                                                <tr>
+                                                    <td>Field:</td>
+                                                    <td>
+                                                        <select class="form-control" id="field_key" name="field_key" style="width:300px;">
+                                                            @foreach (Clarity_HSA.Models.Field field_option in fields)
+                                                            {
+                                                                if (field_option.field_key == field.field.field_key)
+                                                                {
+                                                                    if (field_option.field_key == "calculated")
+                                                                    {
+                                                                        <option value="@field_option.field_key" selected="selected">@field_option.name</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@field_option.field_key" selected="selected">@field_option.source: @field_option.name</option>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (field_option.field_key == "calculated")
+                                                                    {
+                                                                        <option value="@field_option.field_key">@field_option.name</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@field_option.field_key">@field_option.source: @field_option.name</option>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <input type="submit" class="btn btn-primary" value="Update" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>
+        <a class="pull-right btn btn-success" href="#" data-toggle="modal" data-target="#add_field_modal">Add Field</a>
+        <div style="clear:both;"></div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="add_field_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/Employer/AddField" method="post">
+                        <input type="hidden" name="report_id" value="@report.id" />
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Add Field</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <tr>
+                                    <td>Field:</td>
+                                    <td>
+                                        <select class="form-control" id="field_key" name="field_key" style="width:300px;">
+                                            @foreach (Clarity_HSA.Models.Field field_option in fields)
+                                            {
+                                                if (field_option.field_key == "calculated")
+                                                {
+                                                    <option value="@field_option.field_key">@field_option.name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@field_option.field_key">@field_option.source: @field_option.name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="btn btn-primary" value="Add" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="grouping" style="padding:20px;">
+        <form id="report_details" action="/Employer/ReportSave" method="post">
+            <input type="hidden" name="report_id" value="@report.id" />
+            <input type="hidden" name="page" value="1" />
+            <br />
+            <h4>Grouping</h4>
+            <div class="form-group">
+                <label for="group_by">Group By</label>
+                <select class="form-control" id="group_by" name="group_by" style="width:300px;">
+                    <option value="">No Grouping</option>
+                    @foreach (Clarity_HSA.Models.Field field in fields)
+                    {
+                        if (field.field_key != "calculated")
+                        {
+                            if (field.field_key == report.grouping_field)
+                            {
+                                <option value="@field.field_key" selected="selected">@field.source: @field.name</option>
+                            }
+                            else
+                            {
+                                <option value="@field.field_key">@field.source: @field.name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <br />
+            <h4>Totals and Subtotals</h4>
+            <div class="checkbox">
+                @if (report.show_subtotals)
+                {
+                    <label><input name="subtotals" type="checkbox" checked> Subtotal Numeric and Currency Fields for Groups</label>
+                }
+                else
+                {
+                    <label><input name="subtotals" type="checkbox"> Subtotal Numeric and Currency Fields for Groups</label>
+                }
+            </div>
+            <div class="checkbox">
+                @if (report.show_totals)
+                {
+                    <label><input name="totals" type="checkbox" checked> Total Numeric and Currency Fields for Report</label>
+                }
+                else
+                {
+                    <label><input name="totals" type="checkbox"> Total Numeric and Currency Fields for Report</label>
+                }
+            </div>
+            <input type="submit" class="pull-right btn btn-primary" value="Save Grouping and Totals" />
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="profile" style="padding:20px;">
+        <form id="report_details" action="/Employer/ReportSave" method="post">
+            <input type="hidden" name="report_id" value="@report.id" />
+            <input type="hidden" name="page" value="2" />
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Output Format</th>
+                    <th>Delivery Type</th>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="radio">
+                            @if (report.output_format == "excel")
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_1" value="excel" checked> Excel</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_1" value="excel"> Excel</label>
+                            }
+                        </div>
+                        <div class="radio">
+                            @if (report.output_format == "csv")
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_2" value="csv" checked> CSV</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_2" value="csv"> CSV</label>
+                            }
+                        </div>
+                        <div class="radio">
+                            @if (report.output_format == "txt")
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_3" value="txt" checked> TXT</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_3" value="txt"> TXT</label>
+                            }
+                        </div>
+                        <div class="radio">
+                            @if (report.output_format == "pdf")
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_4" value="pdf" checked> PDF</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_4" value="pdf"> PDF</label>
+                            }
+                        </div>
+                        <div class="radio">
+                            @if (report.output_format == "xml")
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_5" value="xml" checked> XML</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="output_format" id="output_format_5" value="xml"> XML</label>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            @if (report.delivery_type == "download_file")
+                            {
+                                <label><input type="radio" name="delivery_type" id="delivery_type_1" value="download_file" onclick="toggle_delivery_options();" checked> Download File</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="delivery_type" id="delivery_type_1" value="download_file" onclick="toggle_delivery_options();"> Download File</label>
+                            }
+                        </div>
+                        <div id="download_file_options" class="delivery_options">
+                        </div>
+                        <div class="radio">
+                            @if (report.delivery_type == "ftp_sftp")
+                            {
+                                <label><input type="radio" name="delivery_type" id="delivery_type_2" value="ftp_sftp" onclick="toggle_delivery_options();" checked> FTP/SFTP</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="delivery_type" id="delivery_type_2" value="ftp_sftp" onclick="toggle_delivery_options();"> FTP/SFTP</label>
+                            }
+                        </div>
+                        <div id="ftp_sftp_options" class="delivery_options">
+                            <input type="text" name="delivery_ftp_address" class="form-control" placeholder="FTP Address" value="@report.delivery_ftp_address" />
+                            <input type="text" name="delivery_ftp_username" class="form-control" placeholder="FTP Username" value="@report.delivery_ftp_username" />
+                            <input type="text" name="delivery_ftp_password" class="form-control" placeholder="FTP Password" value="@report.delivery_ftp_password" />
+                            <input type="text" name="delivery_ftp_port" class="form-control" placeholder="FTP Port" value="@report.delivery_ftp_port" />
+                            <input type="text" name="delivery_ftp_path" class="form-control" placeholder="FTP Path" value="@report.delivery_ftp_path" />
+                        </div>
+                        <div class="radio">
+                            @if (report.delivery_type == "secure_email")
+                            {
+                                <label><input type="radio" name="delivery_type" id="delivery_type_3" value="secure_email" onclick="toggle_delivery_options();" checked> Secure Email</label>
+                            }
+                            else
+                            {
+                                <label><input type="radio" name="delivery_type" id="delivery_type_3" value="secure_email" onclick="toggle_delivery_options();"> Secure Email</label>
+                            }
+                        </div>
+                        <div id="email_options" class="delivery_options">
+                            <input type="text" name="delivery_email_address" id="delivery_email_address" class="form-control" placeholder="Email Address" value="@report.delivery_email_address" />
+                            @if (contacts != null && contacts.Length > 0)
+                            {
+                                <br />
+                                <span>Contact List:</span>
+                                <br />
+                                <select class="form-control" id="contacts" onchange="$('#delivery_email_address').val($('#contacts').val());">
+                                    @foreach (Clarity_HSA.Models.Role role in contacts)
+                                    {
+                                        if (role.role_type == "admin" || role.role_type == "employer")
+                                        {
+                                            <option value="@role.user.email">@role.user.first_name @role.user.last_name (@role.user.email)</option>
+                                        }
+                                    }
+                                </select>
+                            }
+                        </div>
+                        <script type="text/javascript">
+
+                            function toggle_delivery_options() {
+                                $('.delivery_options').hide();
+
+                                if ($('#delivery_type_1').is(':checked')) {
+                                    $('#download_file_options').show();
+                                }
+                                else if ($('#delivery_type_2').is(':checked')) {
+                                    $('#ftp_sftp_options').show();
+                                }
+                                else if ($('#delivery_type_3').is(':checked')) {
+                                    $('#email_options').show();
+                                }
+                            }
+
+                            toggle_delivery_options();
+
+                        </script>
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" class="pull-right btn btn-primary" value="Save Format and Delivery Type" />
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="scheduling" style="padding:20px;">
+        <form id="report_details" action="/Employer/ReportSave" method="post">
+            <input type="hidden" name="report_id" value="@report.id" />
+            <input type="hidden" name="page" value="3" />
+            <input type="hidden" name="payroll_calendar" value="custom" />
+            <h4>Automatically Run Report</h4>
+            <br />
+            <table id="schedule-table" class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Date</th>
+                    <th>Recurrence</th>
+                    <th></th>
+                </tr>
+                @foreach (Clarity_HSA.Models.CustomReportSchedule schedule in report.custom_report_schedules)
+                {
+                    <tr class="schedule-row">
+                        <td>
+                            <div class="input-group">
+                                <input type="date" class="custom_report_schedule_date form-control" placeholder="" value="@schedule.start_date" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <select class="custom_report_schedule_recurrence form-control">
+                                    @if (schedule.recurrence == "None")
+                                    {
+                                        <option value="None" selected="selected">None</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="None">None</option>
+                                    }
+                                    @if (schedule.recurrence == "Daily")
+                                    {
+                                        <option value="Daily" selected="selected">Daily</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Daily">Daily</option>
+                                    }
+                                    @if (schedule.recurrence == "Weekly")
+                                    {
+                                        <option value="Weekly" selected="selected">Weekly</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Weekly">Weekly</option>
+                                    }
+                                    @if (schedule.recurrence == "Bi-Weekly")
+                                    {
+                                        <option value="Bi-Weekly" selected="selected">Bi-Weekly</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Bi-Weekly">Bi-Weekly</option>
+                                    }
+                                    @if (schedule.recurrence == "Monthly")
+                                    {
+                                        <option value="Monthly" selected="selected">Monthly</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Monthly">Monthly</option>
+                                    }
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <a href="#" class="btn btn-success" onclick="add_schedule_row();">Add Schedule Row</a>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_scheduling();">Save Scheduling</button>
+            <div style="clear:both;"></div>
+        </form>
+
+        <form id="scheduling_save_form" action="/Employer/SaveReportScheduling" method="post">
+            <input type="hidden" name="report_id" value="@report.id" />
+            <input type="hidden" id="schedule_json" name="schedule_json" value="" />
+        </form>
+
+        <script type="text/javascript">
+
+            function add_schedule_row() {
+                $('#schedule-table').append('<tr class="schedule-row"><td><div class="input-group"><input type="date" class="custom_report_schedule_date form-control" placeholder="" /></div></td><td><div class="input-group"><select class="custom_report_schedule_recurrence form-control"><option value="None">None</option><option value="Daily">Daily</option><option value="Weekly">Weekly</option><option value="Bi-Weekly">Bi-Weekly</option><option value="Monthly">Monthly</option></select></div></td><td><a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a></td></tr>');
+            }
+
+            function save_scheduling() {
+                var schedules = new Array();
+
+                $('.schedule-row').each(function (index) {
+                    var schedule = {};
+                    schedule.start_date = $(this).find('.custom_report_schedule_date').val();
+                    schedule.recurrence = $(this).find('.custom_report_schedule_recurrence').val();
+                    schedules.push(schedule);
+                });
+
+                var schedules_obj = {};
+                schedules_obj.schedules = schedules;
+
+                $('#schedule_json').val(JSON.stringify(schedules_obj));
+                $('#scheduling_save_form').submit();
+            }
+
+        </script>
+    </div>
+    @if (report.organization == null)
+    {
+        <div role="tabpanel" class="tab-pane" id="access" style="padding:20px;">
+            <form id="report_access_form" action="/Employer/ReportSave" method="post">
+                <input type="hidden" name="report_id" value="@report.id" />
+                <input type="hidden" name="page" value="4" />
+                <input type="hidden" id="global_report_orgs" name="global_report_orgs" value="" />
+                @foreach (Clarity_HSA.Models.Organization organization in (List<Clarity_HSA.Models.Organization>)@HttpContext.Current.Session["employer_organizations"])
+                {
+                    if (report.global_report_orgs != null)
+                    {
+                        if (report.global_report_orgs.Contains("~" + organization.id + "~"))
+                        {
+                            <input type="checkbox" class="org_check" id="org_check_@organization.id" checked="checked" /> @organization.name<br />
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="org_check" id="org_check_@organization.id" /> @organization.name<br />
+                        }
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="org_check" id="org_check_@organization.id" /> @organization.name<br />
+                    }
+                }
+                <br /><br />
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_access();">Save Access</button>
+                <div style="clear:both;"></div>
+            </form>
+        </div>
+
+        <script type="text/javascript">
+
+            function save_access()
+            {
+                var orgs = "";
+                
+                $('.org_check:checkbox:checked').each(function ()
+                {
+                    orgs += "~" + $(this).attr('id').replace("org_check_", "") + "~";
+                });
+
+                $('#global_report_orgs').val(orgs);
+                $('#report_access_form').submit();
+            }
+
+        </script>
+    }
+    </div>
+ </div>

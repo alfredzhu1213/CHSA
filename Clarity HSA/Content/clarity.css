@@ -1,0 +1,66 @@
+﻿.navbar
+{
+    margin-bottom: 0;
+}
+
+#sidebar-wrapper
+{
+    background-color: #f8f8f8;
+}
+
+.sidebar-nav
+{
+    top: 15px;
+}
+
+.sidebar-nav li a:hover
+{
+    color: black !important;
+}
+
+.sidebar-nav .active
+{
+    background-color: #e7e7e7;
+}
+
+.welcome
+{
+    font-weight: bold;
+    color: #333 !important;
+}
+
+.logout
+{
+    font-weight: bold;
+    color: #333 !important;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+
+.organization-td
+{
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.organization-table
+{
+    border: none !important;
+}
+
+.full-page
+{
+    padding-left: 0 !important;
+}
+
+.combobox-container
+{
+    margin-top: 9px;
+    margin-right: 10px;
+}
+
+.combobox-container input
+{
+    height: 30px;
+    padding-left: 5px;
+}

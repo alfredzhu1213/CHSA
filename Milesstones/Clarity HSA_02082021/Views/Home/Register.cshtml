@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+
+<center><h3>Employee Registration</h3></center>
+
+<br />
+<div class="col-md-6 col-md-offset-3">
+    <form class="form-horizontal" method="post" action="/Home/ProcessRegistration">
+
+        <div class="form-group">
+            <label for="first_name" class="cols-sm-2 control-label">First Name</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Enter your First Name" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="last_name" class="cols-sm-2 control-label">Last Name</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Enter your Last Name" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="last_name" class="cols-sm-2 control-label">Date of Birth</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                    <input type="date" class="form-control" name="dob" id="dob" placeholder="Enter your Date of Birth" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="last_name" class="cols-sm-2 control-label">Phone Number</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="Enter your Phone Number" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="cols-sm-2 control-label">Your Email</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="email" id="email" placeholder="Enter your Email" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="username" class="cols-sm-2 control-label">Username</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter your Username" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="cols-sm-2 control-label">Password</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                    <input type="password" class="form-control" name="confirm" id="confirm" placeholder="Confirm your Password" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="username" class="cols-sm-2 control-label">Social Security Number, Last 4 Digits</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="ssn" id="ssn" placeholder="XXXX" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="organization_id" class="cols-sm-2 control-label">Employer</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <select class="form-control" id="organization_id" name="organization_id">
+                        @foreach (Clarity_HSA.Models.Organization organization in (List<Clarity_HSA.Models.Organization>)ViewData["organizations"])
+                        {
+                            <option value="@organization.id">@organization.name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        @if ((bool)ViewData["error"] == true)
+        {
+            <br /><br />
+            <p style="color:red; font-weight:bold;">We could not find an employee record in our database matching the name, email, SSN, and employer that you provided us!</p>
+            <br /><br />
+        }
+
+        <br />
+        <div class="form-group ">
+            <input type="submit" class="btn btn-primary btn-lg btn-block login-button" value="Register" />
+        </div>
+    </form>
+</div>

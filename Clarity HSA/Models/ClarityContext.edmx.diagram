@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0518a3a9c69f4b4b82d1d8ac5fb6c63b" Name="Diagram1" ZoomLevel="68" >
+        <EntityTypeShape EntityType="ClarityContext.User" Width="1.5" PointX="4.25" PointY="2.125" />
+        <EntityTypeShape EntityType="ClarityContext.Organization" Width="1.5" PointX="9.125" PointY="2.125" />
+        <EntityTypeShape EntityType="ClarityContext.Role" Width="1.5" PointX="6.75" PointY="2.125" />
+        <AssociationConnector Association="ClarityContext.UserRole" />
+        <AssociationConnector Association="ClarityContext.OrganizationRole" />
+        <AssociationConnector Association="ClarityContext.OrganizationOrganization" />
+        <EntityTypeShape EntityType="ClarityContext.Demographic" Width="1.5" PointX="1.75" PointY="2.125" />
+        <AssociationConnector Association="ClarityContext.EmployeeUser" />
+        <EntityTypeShape EntityType="ClarityContext.Charge" Width="1.5" PointX="2.75" PointY="8.25" />
+        <AssociationConnector Association="ClarityContext.EmployeeLoan" />
+        <EntityTypeShape EntityType="ClarityContext.Deposit" Width="1.5" PointX="4.75" PointY="5.875" />
+        <EntityTypeShape EntityType="ClarityContext.DashboardConfig" Width="1.5" PointX="6.875" PointY="4.875" />
+        <AssociationConnector Association="ClarityContext.UserDashboardConfig" />
+        <EntityTypeShape EntityType="ClarityContext.OrganizationSettings" Width="1.5" PointX="11.375" PointY="2.125" />
+        <AssociationConnector Association="ClarityContext.OrganizationOrganizationSettings" />
+        <EntityTypeShape EntityType="ClarityContext.Report" Width="1.5" PointX="9.125" PointY="5.875" />
+        <AssociationConnector Association="ClarityContext.OrganizationReport" />
+        <EntityTypeShape EntityType="ClarityContext.CustomReportSchedule" Width="1.5" PointX="11.375" PointY="4.875" />
+        <AssociationConnector Association="ClarityContext.ReportCustomReportSchedule" />
+        <EntityTypeShape EntityType="ClarityContext.ReportField" Width="1.5" PointX="11.375" PointY="7.25" />
+        <AssociationConnector Association="ClarityContext.ReportReportField" />
+        <EntityTypeShape EntityType="ClarityContext.Field" Width="1.5" PointX="6.875" PointY="7.625" />
+        <AssociationConnector Association="ClarityContext.FieldReportField" />
+        <AssociationConnector Association="ClarityContext.DemographicDeposit" />
+        <EntityTypeShape EntityType="ClarityContext.FeedLog" Width="1.5" PointX="13.75" PointY="4.375" />
+        <AssociationConnector Association="ClarityContext.OrganizationSettingsFeedLog" />
+        <EntityTypeShape EntityType="ClarityContext.RepaymentTable" Width="1.5" PointX="13.75" PointY="2.125" />
+        <AssociationConnector Association="ClarityContext.RateTableOrganizationSettings" />
+        <EntityTypeShape EntityType="ClarityContext.Loan" Width="1.5" PointX="0.5" PointY="8.25" />
+        <AssociationConnector Association="ClarityContext.LoanCharge" />
+        <AssociationConnector Association="ClarityContext.DemographicLoan" />
+        <EntityTypeShape EntityType="ClarityContext.AvailableEntity" Width="1.5" PointX="13.75" PointY="7.25" />
+        <EntityTypeShape EntityType="ClarityContext.AvailableEntityOption" Width="1.5" PointX="15.875" PointY="7.25" />
+        <AssociationConnector Association="ClarityContext.AvailableEntityEntityOption" />
+        <EntityTypeShape EntityType="ClarityContext.ReportEntity" Width="1.5" PointX="11.375" PointY="10.375" />
+        <AssociationConnector Association="ClarityContext.AvailableEntityReportEntity" />
+        <AssociationConnector Association="ClarityContext.ReportReportEntity" />
+        <EntityTypeShape EntityType="ClarityContext.EntityOption" Width="1.5" PointX="15.875" PointY="10.375" />
+        <AssociationConnector Association="ClarityContext.ReportEntityEntityOption" />
+        <AssociationConnector Association="ClarityContext.AvailableEntityOptionEntityOption" />
+        <AssociationConnector Association="ClarityContext.ReportEntityReportEntity" />
+        <EntityTypeShape EntityType="ClarityContext.ReportFieldChange" Width="1.5" PointX="9.125" PointY="12.375" />
+        <AssociationConnector Association="ClarityContext.ReportReportFieldChange" />
+        <EntityTypeShape EntityType="ClarityContext.FeedLogDetail" Width="1.5" PointX="15.875" PointY="4.375" />
+        <AssociationConnector Association="ClarityContext.FeedLogFeedLogDetail" />
+        <EntityTypeShape EntityType="ClarityContext.Report834Options" Width="1.5" PointX="6.875" PointY="10.5" />
+        <AssociationConnector Association="ClarityContext.ReportReport834Options" />
+        <EntityTypeShape EntityType="ClarityContext.CronLog" Width="1.5" PointX="15.875" PointY="2.125" />
+        <EntityTypeShape EntityType="ClarityContext.Termination" Width="1.5" PointX="4.75" PointY="10.5" />
+        <AssociationConnector Association="ClarityContext.ReportTermination" />
+        <EntityTypeShape EntityType="ClarityContext.ReportScheduleDuration" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="ClarityContext.Charges_archiveClarity" Width="1.5" PointX="2.75" PointY="13.75" />
+        <EntityTypeShape EntityType="ClarityContext.CustomReportSchedulesBU" Width="1.5" PointX="13.75" PointY="13.75" />
+        <EntityTypeShape EntityType="ClarityContext.ReportFieldsBU" Width="1.5" PointX="15.75" PointY="13.75" />
+        <EntityTypeShape EntityType="ClarityContext.ReportFieldsHolding" Width="1.5" PointX="9.75" PointY="17.75" />
+        <EntityTypeShape EntityType="ClarityContext.extra_report_fields" Width="1.5" PointX="11.75" PointY="17.75" />
+        <EntityTypeShape EntityType="ClarityContext.HSA_error_log" Width="1.5" PointX="17.75" PointY="13.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

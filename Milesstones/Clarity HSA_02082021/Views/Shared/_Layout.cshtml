@@ -1,0 +1,437 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script type="text/javascript" src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="~/Scripts/highcharts/4.2.0/highcharts.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-combobox.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-combobox.css" />
+    <link href="~/Content/simple-sidebar.css" rel="stylesheet">
+    <link href="~/Content/clarity.css" rel="stylesheet">
+        @if (HttpContext.Current.Session["active_organization_color_1"] != null && (string)HttpContext.Current.Session["active_organization_color_1"] != "")
+        {
+            <style>
+                
+                #sidebar-wrapper
+                {
+                    background-color: @HttpContext.Current.Session["active_organization_color_1"];
+                }
+
+                .navbar-default
+                {
+                    background-color: @HttpContext.Current.Session["active_organization_color_1"];
+                    border-color: @HttpContext.Current.Session["active_organization_color_1"];
+                    border-radius: 0;
+                }
+
+                .active
+                {
+                    background-color: rgba(1, 1, 1, 0.2) !important;
+                }
+
+                .active > a
+                {
+                    background-color: rgba(1, 1, 1, 0.2) !important;
+                }
+
+            </style>
+        }
+
+        @if (HttpContext.Current.Session["active_organization_color_2"] != null && (string)HttpContext.Current.Session["active_organization_color_2"] != "")
+        {
+            <style>
+
+                a
+                {
+                    color: @HttpContext.Current.Session["active_organization_color_2"] !important;
+                }
+
+                .welcome
+                {
+                    color: @HttpContext.Current.Session["active_organization_color_2"] !important;
+                }
+
+                .logout
+                {
+                    color: @HttpContext.Current.Session["active_organization_color_2"] !important;
+                }
+
+            </style>
+        }
+        
+        @if (Request.Url.PathAndQuery.Contains("/ReportBuilder/ReportDetails"))
+        {
+            <style>
+
+                #sidebar-wrapper
+                {
+                    display: none !important;
+                }
+
+                #wrapper
+                {
+                    padding-left: 0 !important;
+                }
+
+            </style>
+        }
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @if (HttpContext.Current.Session["active_organization_logo_url"] != null && (string)HttpContext.Current.Session["active_organization_logo_url"] != "")
+                {
+                    <a class="navbar-brand" href="/"><img src="@HttpContext.Current.Session["active_organization_logo_url"]" height="30" /></a>
+                }
+                else if (Request.Url.PathAndQuery.Contains("/ReportBuilder/"))
+                {
+                    <a class="navbar-brand" href="/"><img src="~/Content/logo.png" height="30" /></a>
+                }
+                else
+                {
+                    <a class="navbar-brand" href="/"><img src="~/Content/logo.png" height="30" /></a>
+                }
+            </div>
+            @if (@HttpContext.Current.Session["user"] != null)
+            {
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                </ul>
+                @if (Request.Url.PathAndQuery.Contains("/Employer/"))
+                {
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="width:220px;">
+                        <select class="combobox" id="employer_company_switch" onchange="if ($('#employer_company_switch').val() != null) { document.location.href = '/Employer/EmployeeSetOrganization/' + $('#employer_company_switch').val(); }">
+                            <option value="-1">All Employers</option>
+                            @foreach (Clarity_HSA.Models.Organization organization in (List<Clarity_HSA.Models.Organization>)@HttpContext.Current.Session["employer_organizations"])
+                            {
+                                if ((string)HttpContext.Current.Session["active_organization_name"] == organization.name)
+                                {
+                                    <option value="@organization.id" selected="selected">@organization.name</option>
+                                }
+                                else
+                                {
+                                    <option value="@organization.id">@organization.name</option>
+                                }
+                            }
+                        </select>
+                    </li>
+                </ul>
+                }
+                else if (Request.Url.PathAndQuery.Contains("/ReportBuilder/"))
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="width:220px;">
+                            <select class="combobox" id="employer_company_switch" onchange="if ($('#employer_company_switch').val() != null) { document.location.href = '/ReportBuilder/EmployeeSetOrganization/' + $('#employer_company_switch').val(); }">
+                                <option value="-1">Global Reports</option>
+                                @foreach (Clarity_HSA.Models.Organization organization in (List<Clarity_HSA.Models.Organization>)@HttpContext.Current.Session["employer_organizations"])
+                                {
+                                    if ((string)HttpContext.Current.Session["active_organization_name"] == organization.name)
+                                    {
+                                        <option value="@organization.id" selected="selected">@organization.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@organization.id">@organization.name</option>
+                                    }
+                                }
+                            </select>
+                        </li>
+                    </ul>
+                }
+
+                @if (Request.Url.PathAndQuery.Contains("/Employer/"))
+                {
+                <form class="navbar-form navbar-right" action="/Employer/EmployeeSearch" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search" value="@HttpContext.Current.Session["employee_search"]">
+                    </div>
+                    <input type="submit" class="btn btn-default" value="Go" />
+                </form>
+                }
+                <ul class="nav navbar-nav navbar-right">
+                    @if (Request.Url.PathAndQuery.Contains("/Employer/") && (bool)@HttpContext.Current.Session["has_employer"] == true)
+                    {
+                        <li class="active"><a href="/Employer/Dashboard">Employer Portal</a></li>
+                    }
+                    else if ((bool)@HttpContext.Current.Session["has_employer"] == true)
+                    {
+                        <li><a href="/Employer/Dashboard">Employer Portal</a></li>
+                    }
+                    @if (Request.Url.PathAndQuery.Contains("/Employee/") && (bool)@HttpContext.Current.Session["has_employee"] == true)
+                    {
+                        <li class="active"><a href="/Employee/Dashboard">Employee Portal</a></li>
+                    }
+                    else if ((bool)@HttpContext.Current.Session["has_employee"] == true)
+                    {
+                        <li><a href="/Employee/Dashboard">Employee Portal</a></li>
+                    }
+                    @if (Request.Url.PathAndQuery.Contains("/Admin/") && (bool)@HttpContext.Current.Session["has_admin"] == true)
+                    {
+                        <li class="active"><a href="/Admin/Organizations">Admin Portal</a></li>
+                    }
+                    else if ((bool)@HttpContext.Current.Session["has_admin"] == true)
+                    {
+                        <li><a href="/Admin/Organizations">Admin Portal</a></li>
+                    }
+                    @if (Request.Url.PathAndQuery.Contains("/ReportBuilder/") && (bool)@HttpContext.Current.Session["has_report_builder"] == true)
+                    {
+                        <li class="active"><a href="/ReportBuilder/Reports">Feed Builder</a></li>
+                    }
+                    else if ((bool)@HttpContext.Current.Session["has_report_builder"] == true)
+                    {
+                        <li><a href="/ReportBuilder/Reports">Feed Builder</a></li>
+                    }
+                </ul>
+            </div><!-- /.navbar-collapse -->
+            }
+            else
+            {
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav"></ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/Home/Login">Login</a></li>
+                        <li><a href="/Home/Register">Employee Registration</a></li>
+                    </ul>
+                </div>
+            }
+        </div><!-- /.container-fluid -->
+    </nav>
+    @if (@HttpContext.Current.Session["user"] != null)
+    {
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li><a href="#" class="welcome">Welcome, @(((Clarity_HSA.Models.User)@HttpContext.Current.Session["user"]).first_name) @(((Clarity_HSA.Models.User)@HttpContext.Current.Session["user"]).last_name)</a></li>
+                    <li><a href="/Home/Logout" class="logout">Logout</a></li>
+
+                    @if (Request.Url.PathAndQuery.Contains("/Employer/"))
+                    {
+                        if (Request.Url.PathAndQuery == "/Employer/Dashboard")
+                        {
+                            <li class="active">
+                                <a href="/Employer/Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employer/Dashboard">Dashboard</a>
+                            </li>
+                        }
+
+                        if (Request.Url.PathAndQuery == "/Employer/Employees" || Request.Url.PathAndQuery == "/Employer/EmployeeDetails")
+                        {
+                            <li class="active">
+                                <a href="/Employer/Employees">Employees</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employer/Employees">Employees</a>
+                            </li>
+                        }
+
+                        if (Request.Url.PathAndQuery == "/Employer/Loans" || Request.Url.PathAndQuery == "/Employer/LoanDetails")
+                        {
+                            <li class="active">
+                                <a href="/Employer/Loans">Advances</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employer/Loans">Advances</a>
+                            </li>
+                        }
+
+                        if (Request.Url.PathAndQuery == "/Employer/Reports" || Request.Url.PathAndQuery == "/Employer/ReportDetails")
+                        {
+                            <li class="active">
+                                <a href="/Employer/Reports">Reports</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employer/Reports">Reports</a>
+                            </li>
+                        }
+
+                        if (Request.Url.PathAndQuery == "/Employer/Feeds")
+                        {
+                            <li class="active">
+                                <a href="/Employer/Feeds">Feeds</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employer/Feeds">Feeds</a>
+                            </li>
+                        }
+
+                        if (Request.Url.PathAndQuery == "/Employer/Rules")
+                        {
+                            <li class="active">
+                                <a href="/Employer/Rules">Rules</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employer/Rules">Rules</a>
+                            </li>
+                        }
+                    }
+
+                    @if (Request.Url.PathAndQuery.Contains("/Employee/"))
+                    {
+                        if (Request.Url.PathAndQuery == "/Employee/Dashboard")
+                        {
+                            <li class="active">
+                                <a href="/Employee/Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employee/Dashboard">Dashboard</a>
+                            </li>
+                        }
+
+                        if (Request.Url.PathAndQuery == "/Employee/ContactUs")
+                        {
+                            <li class="active">
+                                <a href="/Employee/ContactUs">Contact Us</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Employee/ContactUs">Contact Us</a>
+                            </li>
+                        }
+                    }
+
+                    @if (Request.Url.PathAndQuery.Contains("/Admin/"))
+                    {
+                        if (Request.Url.PathAndQuery == "/Admin/Organizations")
+                        {
+                            <li class="active">
+                                <a href="/Admin/Organizations">Organizations</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Admin/Organizations">Organizations</a>
+                            </li>
+                        }
+                        <li>
+                            <a href="/Home/Cron">Execute Report Cron</a>
+                        </li>
+                        <li>
+                            <a href="/Home/AlegeusCron">Execute Alegeus Outgoing Cron</a>
+                        </li>
+                        <li>
+                            <a href="/Home/AlegeusCron2">Execute Alegeus Incoming Cron</a>
+                        </li>
+                        if (Request.Url.PathAndQuery == "/Admin/CronLogs")
+                        {
+                            <li class="active">
+                                <a href="/Admin/CronLogs">Cron Logs</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/Admin/CronLogs">Cron Logs</a>
+                            </li>
+                        }
+                    }
+
+                    @if (Request.Url.PathAndQuery.Contains("/ReportBuilder/"))
+                    {
+                        if (Request.Url.PathAndQuery == "/ReportBuilder/Reports" || Request.Url.PathAndQuery == "/ReportBuilder/ReportDetails")
+                        {
+                            <li class="active">
+                                <a href="/ReportBuilder/Reports">Feeds</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/ReportBuilder/Reports">Feeds</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <!-- /#sidebar-wrapper -->
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+        </div>
+        <!-- /#wrapper -->
+    }
+    else
+    {
+        <div id="wrapper full-page">
+            <!-- /#sidebar-wrapper -->
+            <!-- Page Content -->
+            <div id="page-content-wrapper" @ViewBag.CustomWrapperCSS>
+                <div class="container-fluid" @ViewBag.CustomWrapperCSS>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+        </div>
+        <!-- /#wrapper -->
+    }
+
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    $(document).ready(function () {
+        $('.combobox').combobox();
+    });
+    </script>
+
+    @RenderSection("scripts", false)
+</body>
+</html>

@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Reports";
+
+    int organization_id = (int)Session["active_organization"];
+}
+
+<h3 class="pull-left">Reports</h3>
+<a class="pull-right btn btn-success" href="/Employer/NewReport">Add New Report</a>
+<div style="clear:both;"></div>
+
+<br />
+
+@if (organization_id <= 0)
+{
+    <h4>Note: You are viewing global reports for all organizations. To view an individual organization's reports, select it from the organization menu.</h4>
+}
+
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (Clarity_HSA.Models.Report report in (List<Clarity_HSA.Models.Report>)@ViewData["reports"])
+    {
+        if (report.name != null && report.is_report_builder == false)
+        {
+            <tr>
+                <td>@report.name</td>
+                <td><a href="/Employer/ReportDetails/@report.id" class="btn btn-default">Edit Report</a></td>
+                <td><a href="/Employer/RunReport/@report.id" class="btn btn-default">Run Report</a></td>
+            </tr>
+        }
+    }
+</table>

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Feed Log";
+
+    int organization_id = (int)Session["active_organization"];
+    var feed = (Clarity_HSA.Models.FeedLog)@ViewData["log"];
+}
+
+<h3>Feed Log</h3>
+
+<br />
+
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Timestamp</th>
+        <th>Message</th>
+    </tr>
+    @foreach (Clarity_HSA.Models.FeedLogDetail log in feed.feed_log_details)
+    {
+            <tr>
+                <td>@log.message_timestamp</td>
+                <td>@Html.Raw(log.log_message)</td>
+            </tr>
+    }
+</table>

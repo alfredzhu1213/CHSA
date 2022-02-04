@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<center><h3>Login</h3></center>
+
+<br />
+<div class="col-md-6 col-md-offset-3">
+    <form class="form-horizontal" method="post" action="/Home/ProcessLogin">
+
+        <div class="form-group">
+            <label for="username" class="cols-sm-2 control-label">Username</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter your Username" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="cols-sm-2 control-label">Password</label>
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group ">
+            <input type="submit" class="btn btn-primary btn-lg btn-block login-button" value="Login" />
+        </div>
+        <center>
+            <br /><br />
+            <a href="#" data-toggle="modal" data-target="#forgotPassword">Forgot Password?</a>
+            <br /><br />
+            <span style="color:red;">@ViewData["error"]</span>
+        </center>
+    </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="forgotPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <form action="/Home/ForgotPassword" method="post">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Forgot Password</h4>
+          </div>
+          <div class="modal-body">
+              Enter your email address below, and if your email address exists on file, we will send you instructions to reset your password.
+              <br /><br />
+              <input type="email" class="form-control" name="email" required="required" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-primary" value="Submit" />
+          </div>
+       </form>
+    </div>
+  </div>
+</div>

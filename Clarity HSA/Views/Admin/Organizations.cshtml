@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Organizations";
+}
+
+<h3 class="pull-left">Organizations</h3>
+<a class="pull-right btn btn-success" href="/Admin/OrganizationCreate">Add New Organization</a>
+<div style="clear:both;"></div>
+
+<br />
+<table class="table table-bordered organization-table">
+    @Html.Raw(ViewData["organizations"])
+</table>

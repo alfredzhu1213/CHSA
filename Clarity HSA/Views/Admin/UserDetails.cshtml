@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "Edit User";
+
+    var organization = (Clarity_HSA.Models.Organization)@ViewData["organization"];
+    var user = (Clarity_HSA.Models.User)@ViewData["user"];
+    var role = (Clarity_HSA.Models.Role)@ViewData["role"];
+}
+
+<h3>Edit User</h3>
+
+<br />
+<form action="/Admin/UserSaveEdit" method="post">
+    <input type="hidden" name="organization_id" value="@organization.id" />
+    <input type="hidden" name="user_id" value="@user.id" />
+    <table class="table table-bordered">
+        <tr>
+            <td><label for="username">Username:</label></td>
+            <td><input type="text" class="form-control" id="username" name="username" placeholder="Username" value="@user.username" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="username">Email:</label></td>
+            <td><input type="text" class="form-control" id="email" name="email" placeholder="Email" value="@user.email" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="first_name">First Name:</label></td>
+            <td><input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" value="@user.first_name" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="last_name">Last Name:</label></td>
+            <td><input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="@user.last_name" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password:</label></td>
+            <td><input type="password" class="form-control" id="password" name="password" placeholder="Password" value="fvhjbfv" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="confirm_password">Confirm Password:</label></td>
+            <td><input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" value="fvhjbfv" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="roles">Role:</label></td>
+            <td>
+                <select id="roles" name="access_level" class="form-control">
+                    @if (role.access_level == 0)
+                    {
+                        <option value="0" selected="selected">None</option>
+                    }
+                    else
+                    {
+                        <option value="0">None</option>
+                    }
+                    @if (role.access_level == 1)
+                    {
+                        <option value="1" selected="selected">View</option>
+                    }
+                    else
+                    {
+                        <option value="1">View</option>
+                    }
+                    @if (role.access_level == 2)
+                    {
+                        <option value="2" selected="selected">Edit</option>
+                    }
+                    else
+                    {
+                        <option value="2">Edit</option>
+                    }
+                    @if (role.access_level == 3)
+                    {
+                        <option value="3" selected="selected">Admin</option>
+                    }
+                    else
+                    {
+                        <option value="3">Admin</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="organizations">Organization:</label></td>
+            <td>
+                @organization.name
+            </td>
+        </tr>
+    </table>
+    <br /><br />
+    <input type="submit" class="pull-right btn btn-primary" value="Save User" />
+    <div style="clear:both;"></div>
+ </form>

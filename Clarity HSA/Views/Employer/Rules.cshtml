@@ -1,0 +1,351 @@
+﻿
+@{
+    ViewBag.Title = "Rules";
+
+    int organization_id = (int)Session["active_organization"];
+    var organization = (Clarity_HSA.Models.Organization)@ViewData["organization"];
+}
+
+<h3>Rules</h3>
+
+<br />
+
+@if (organization_id > 0)
+{
+    <h4>Repayment Schedule</h4>
+
+    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" style="padding:0;">Edit Repayment Table</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Repayment Table</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="repayment-table" class="table table-bordered table-striped table-hover">
+                        <tr>
+                            <th>Division</th>
+                            <th>Advance Amount (Min)</th>
+                            <th>Advance Amount (Max)</th>
+                            <th>Installment Amount Per Paycheck</th>
+                            <th>Frequency</th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (Clarity_HSA.Models.RepaymentTable repayment in organization.organization_settings.repayment_table)
+                        {
+                            <tr class="repayment-row">
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="division form-control" placeholder="0" value="@repayment.division">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="loan_amount_min form-control" placeholder="0" value="@repayment.loan_amount_min">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="loan_amount_max form-control" placeholder="0" value="@repayment.loan_amount_max">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="repayment_amount form-control" placeholder="0" value="@repayment.repaymant_amount">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input type="text" class="frequency form-control" placeholder="0" value="@repayment.frequency">
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <a href="#" class="btn btn-success" onclick="add_repayment_row();">Add Repayment Row</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_repayment_table();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="repayments_save_form" action="/Employer/SaveRepaymentTable" method="post">
+        <input type="hidden" id="repayments_json" name="repayments_json" value="" />
+    </form>
+
+    <script type="text/javascript">
+        function add_repayment_row()
+        {
+
+            @*//Build an array containing Division records.
+            var Divison = @Html.Raw(Json.Encode(@ViewBag.objDivList));
+            //Create a DropDownList element.
+            var ddldivision = $("<select class='loan_amount_min form-control'>");
+            $.each(Divison, function (k, value) {
+                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                $(ddldivision).append('<option value="' + value.Value + '">' + value.Text + '</option>');
+            });
+            var ddlHtml         = "<select class='loan_amount_min form-control' id='ddldivision' name='objDivList'>" + $(ddldivision).html() + "</select>";
+            var ddlNewValues    = "<td><div class='input-group'>" + ddlHtml+"</div></td>";
+            var txtMin          = "<td><div class='input-group'><div class='input-group-addon'>$</div><input type='text' class='loan_amount_min form-control' placeholder='0' value='0'></div></td>";
+            var txtMax          = "<td><div class='input-group'><div class='input-group-addon'>$</div><input type='text' class='loan_amount_max form-control' placeholder='0' value='0'></div></td>";
+            var Btn             = "<td><div class='input-group'><div class='input-group-addon'>$</div><input type='text' class='repayment_amount form-control' placeholder='0' value='0'></div></td><td><a href='#' class='btn btn-danger' onclick='$(this).parent().parent().remove();'>Delete</a></td>";
+            var repeatRow       = ddlNewValues + txtMin + txtMax + Btn;
+
+            $('#repayment-table tr:last').after('<tr class="repayment-row">' + repeatRow + '</tr>');*/*@
+            $('#repayment-table').append('<tr class="repayment-row"><td><div class="input-group"><input type="text" class="division form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><div class="input-group-addon">$</div><input type="text" class="loan_amount_min form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><div class="input-group-addon">$</div><input type="text" class="loan_amount_max form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><div class="input-group-addon">$</div><input type="text" class="repayment_amount form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><input type="text" class="frequency form-control" placeholder="0" value="0"></div></td><td><a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a></td></tr>');
+
+        }
+
+
+        function save_repayment_table()
+        {
+            var repayments = new Array();
+
+            $('.repayment-row').each(function(index)
+            {
+                var repayment              = {};
+                repayment.loan_amount_min  = $(this).find('.loan_amount_min').val();
+                repayment.loan_amount_max  = $(this).find('.loan_amount_max').val();
+                repayment.repayment_amount = $(this).find('.repayment_amount').val();
+                repayment.division = $(this).find('.division').val();
+                repayment.frequency = $(this).find('.frequency').val();
+                //repayment.division_id      = $(this).find('select[name="objDivList"]').val();
+                repayments.push(repayment);
+            });
+
+            var repayment_obj = {};
+            repayment_obj.repayments = repayments;
+
+            $('#repayments_json').val(JSON.stringify(repayment_obj));
+            $('#repayments_save_form').submit();
+        }
+
+
+    </script>
+
+    <!---br /><br />
+    <h4>Payroll Calendar</h4>
+
+    <div class="radio">
+        <label>
+            <input type="radio" name="payroll_calendar" id="payroll_calendar_1" value="weekly">
+            Weekly
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="payroll_calendar" id="payroll_calendar_2" value="biweekly">
+            Bi-Weekly
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="payroll_calendar" id="payroll_calendar_3" value="semi_monthly">
+            Semi Monthly
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="payroll_calendar" id="payroll_calendar_4" value="monthly">
+            Monthly
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="payroll_calendar" id="payroll_calendar_5" value="custom" checked>
+            Custom
+        </label>
+    </div>
+
+    <br />
+    <div class="panel panel-default col-md-6">
+        <div class="panel-body">
+            <div style="overflow:hidden;">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="datetimepicker"></div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker').datetimepicker({
+                            inline: true
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+
+    <br />
+    <h4>Contribution Limits</h4>
+
+    <div class="form-group">
+        <label for="maximum_loan_amount">Maximum Loan Amount</label>
+        <div class="input-group">
+            <div class="input-group-addon">$</div>
+            <input type="text" class="form-control" id="maximum_loan_amount" placeholder="Amount">
+            <div class="input-group-addon">.00</div>
+        </div>
+    </div-->
+
+    <br /><br />
+    <h4>Termination Policy</h4>
+
+    <form action="/Employer/SaveRules" method="post">
+        <div class="checkbox">
+            <label>
+                @if (organization.organization_settings.withhold_entire_balance)
+                {
+                    <input type="checkbox" name="withhold_entire_balance" value="true" checked="checked" />
+                }
+                else
+                {
+                    <input type="checkbox" name="withhold_entire_balance" value="true" />
+                }
+                Withhold Balance from Final Paycheck
+            </label>
+        </div>
+        <br />
+        <input type="submit" class="btn btn-primary" value="Save Rules" />
+    </form>
+}
+else
+{
+    <h4>Repayment Schedule For Non Divisional Employee</h4>
+
+    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" style="padding:0;">Edit Repayment Table</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Repayment Table</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="repayment-table" class="table table-bordered table-striped table-hover">
+                        <tr>
+                            <th>Division</th>
+                            <th>Advance Amount (Min)</th>
+                            <th>Advance Amount (Max)</th>
+                            <th>Installment Amount Per Paycheck</th>
+                            <th>Frequency</th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (Clarity_HSA.Models.RepaymentTable repayment in organization.organization_settings.repayment_table)
+                        {
+                            <tr class="repayment-row">
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="division form-control" placeholder="0" value="@repayment.division">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="loan_amount_min form-control" placeholder="0" value="@repayment.loan_amount_min">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="loan_amount_max form-control" placeholder="0" value="@repayment.loan_amount_max">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="repayment_amount form-control" placeholder="0" value="@repayment.repaymant_amount">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input type="text" class="frequency form-control" placeholder="0" value="@repayment.frequency">
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <a href="#" class="btn btn-success" onclick="add_repayment_row();">Add Repayment Row</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_repayment_table();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="repayments_save_form" action="/Employer/SaveRepaymentTable" method="post">
+        <input type="hidden" id="repayments_json" name="repayments_json" value="" />
+    </form>
+
+    <script type="text/javascript">
+        function add_repayment_row() {
+            $('#repayment-table').append('<tr class="repayment-row"><td><div class="input-group"><input type="text" class="division form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><div class="input-group-addon">$</div><input type="text" class="loan_amount_min form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><div class="input-group-addon">$</div><input type="text" class="loan_amount_max form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><div class="input-group-addon">$</div><input type="text" class="repayment_amount form-control" placeholder="0" value="0"></div></td><td><div class="input-group"><input type="text" class="frequency form-control" placeholder="0" value="0"></div></td><td><a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a></td></tr>');
+        }
+
+
+        function save_repayment_table() {
+            var repayments = new Array();
+
+            $('.repayment-row').each(function (index) {
+                var repayment = {};
+                repayment.loan_amount_min = $(this).find('.loan_amount_min').val();
+                repayment.loan_amount_max = $(this).find('.loan_amount_max').val();
+                repayment.repayment_amount = $(this).find('.repayment_amount').val();
+                repayment.division = $(this).find('.division').val();
+                repayment.frequency = $(this).find('.frequency').val();
+                //repayment.division_id      = $(this).find('select[name="objDivList"]').val();
+                repayments.push(repayment);
+            });
+
+            var repayment_obj = {};
+            repayment_obj.repayments = repayments;
+
+            $('#repayments_json').val(JSON.stringify(repayment_obj));
+            $('#repayments_save_form').submit();
+        }
+
+
+    </script>
+    
+    @*<h4 style="text-align:center;">You must select an individual organization to view and configure rules!</h4>*@
+
+}
+
+<style>
+    th, td {
+        font-size: 12px;
+    }
+
+    .modal-dialog {
+        width: 950px;
+        margin: 30px auto;
+    }
+</style>

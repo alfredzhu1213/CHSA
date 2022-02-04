@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Create Organization";
+}
+
+<h3>Create Organization</h3>
+
+<br />
+<form action="/Admin/OrganizationSave" method="post">
+    <input type="hidden" name="organization_id" value="-1" />
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Details</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home" style="padding:20px;">
+                <br />
+                <div class="form-group">
+                    <label for="name">Organization Name:</label>
+                    <input type="text" class="form-control" id="name" name="organization_name" placeholder="Organization Name" required="required" />
+                </div>
+                <div class="form-group">
+                    <label for="parent">Parent Organization:</label>
+                    <select id="parent" name="parent_organization_id" class="form-control">
+                        <option value="-1">None</option>
+                        @foreach (Clarity_HSA.Models.Organization parent_organization in (List<Clarity_HSA.Models.Organization>)@ViewData["organizations"])
+                        {
+                            <option value="@parent_organization.id">@parent_organization.name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <input type="submit" class="pull-right btn btn-primary" value="Save Organization" />
+    <div style="clear:both;"></div>
+</form>

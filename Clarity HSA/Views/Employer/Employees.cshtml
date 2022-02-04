@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Employees";
+
+    int organization_id = (int)Session["active_organization"];
+}
+
+<h3>Employees</h3>
+
+<br />
+<div style="width:220px;" class="pull-left">
+    <select class="combobox" id="employee_switch" onchange="if ($('#employee_switch').val() != null && $('#employee_switch').val() != -1) { document.location.href = '/Employer/EmployeeDetails/' + $('#employee_switch').val(); }">
+        <option value="-1">Employee Search</option>
+        @foreach (Clarity_HSA.Models.User employee in (List<Clarity_HSA.Models.User>)@ViewData["employees"])
+        {
+            <option value="@employee.id">@employee.first_name @employee.last_name</option>
+        }
+    </select>
+</div>
+@if (organization_id > 0)
+{
+    <div class="pull-right">
+        <a href="/Employer/AddEmployee" class="btn btn-success">Add Employee</a>
+    </div>
+}
+<div style="clear:both;"></div>
+<br /><br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Charges</th>
+        <th>Repayments</th>
+        <th>Balance</th>
+        <th>Monthly Payment</th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (Clarity_HSA.Models.User employee in (List<Clarity_HSA.Models.User>)@ViewData["employees"])
+    {
+        <tr>
+            <td>@employee.first_name @employee.last_name</td>
+            <td>@employee.employee.charges.Count</td>
+            <td>@employee.employee.deposits.Count</td>
+            <td>
+                @if (@employee.employee.balance >= 0)
+            {
+                    <span>(<span>$@employee.employee.balance.ToString("#,##0.00")</span>)</span>
+                }
+                else
+                {
+                    <span>$@((employee.employee.balance * -1).ToString("#,##0.00")) (credit)</span>
+                }
+            </td>
+            <td>
+                @if (@employee.employee.monthly_payment <= 0)
+            {
+                    <span>$0.00</span>
+                }
+                else
+                {
+                    <span>$@(employee.employee.monthly_payment.ToString("#,##0.00"))</span>
+                }
+            </td>
+            <td><a href="#" class="btn btn-danger" onclick="if (confirm('Are you sure you want to delete this employee?')) { document.location.href = '/Employer/DeleteEmployee/@employee.id'; }">Delete</a></td>
+            <td><a href="/Employer/EmployeeDetails/@employee.id" class="btn btn-default">View Details</a></td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Advance Details";
+
+    var employee = (Clarity_HSA.Models.User)@ViewData["employee"];
+    var loan = (Clarity_HSA.Models.Loan)@ViewData["loan"];
+}
+
+<h3>Advance Details</h3>
+
+<br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Advance Number</th>
+        <th>Current Balance</th>
+        <th>Monthly Payment Amount</th>
+        <th>Last Payment Date</th>
+    </tr>
+    <tr>
+        <td>@loan.loan_id</td>
+        <td>$@loan.balance.ToString("#,##0.00")</td>
+        <td>$@loan.monthly_payment.ToString("#,##0.00")</td>
+        <td>@loan.last_payment_date</td>
+    </tr>
+</table>
+<br />
+<h4>Charges</h4>
+<br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Advance Number</th>
+        <th>Date</th>
+        <th>Charge Amount</th>
+        <th>Description</th>
+    </tr>
+    @foreach (Clarity_HSA.Models.Charge charge in loan.charges)
+    {
+        <tr class="loan loan_0 loan_@loan.id">
+            <td>@loan.loan_id</td>
+            <td>@charge.transaction_date</td>
+            <td>$@charge.approved_amount.ToString("#,##0.00")</td>
+            <td>@charge.description</td>
+        </tr>
+    }
+</table>
+<br />
+<h4>Payments</h4>
+<br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Advance Number</th>
+        <th>Date</th>
+        <th>Repayment Amount</th>
+    </tr>
+    @foreach (Clarity_HSA.Models.Deposit deposit in employee.employee.deposits)
+    {
+        <tr class="loan loan_0 loan_@loan.id">
+            <td>@loan.loan_id</td>
+            <td>@deposit.payroll_date</td>
+            <td>$@deposit.employee_contribution.ToString("#,##0.00")</td>
+        </tr>
+    }
+</table>

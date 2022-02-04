@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Feeds";
+
+    int organization_id = (int)Session["active_organization"];
+}
+
+<h3 class="pull-left">Feeds</h3>
+<a class="pull-right btn btn-success" href="/ReportBuilder/NewReport">Add New Feed</a>
+<div style="clear:both;"></div>
+
+<br />
+
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (Clarity_HSA.Models.Report report in (List<Clarity_HSA.Models.Report>)@ViewData["reports"])
+    {
+        if (report.name != null && report.is_report_builder == true)
+        {
+            <form method="post" action="/ReportBuilder/RunReport" enctype="multipart/form-data">
+                <tr>
+                    <td>@report.name</td>
+                    <td>
+                        <a href="/ReportBuilder/ReportDetails/@report.id" class="btn btn-primary">Edit Feed</a>
+                    </td>
+                    <td>
+                        <a href="/ReportBuilder/CloneReport/@report.id" class="btn btn-primary">Clone Feed</a>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-danger" onclick="if (confirm('Are you sure you want to delete this element?')) { document.location.href = '/ReportBuilder/DeleteReport/@report.id'; }">Delete Feed</a>
+                    </td>
+                    <td>
+                        <input type="hidden" name="report_id" value="@report.id" />
+                        <input type="file" name="report_xml" class="form-control" />
+                    </td>
+                    <td>
+                        <input type="submit" class="btn btn-primary" value="Run Feed" />
+                    </td>
+                </tr>
+            </form>
+        }
+    }
+</table>

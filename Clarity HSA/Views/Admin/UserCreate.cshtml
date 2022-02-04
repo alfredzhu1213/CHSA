@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Create User";
+
+    var organization = (Clarity_HSA.Models.Organization)@ViewData["organization"];
+}
+
+<h3>Create User</h3>
+
+<br />
+<form action="/Admin/UserSaveNew" method="post">
+    <input type="hidden" name="organization_id" value="@organization.id" />
+    <table class="table table-bordered">
+        <tr>
+            <td><label for="username">Username:</label></td>
+            <td><input type="text" class="form-control" id="username" name="username" placeholder="Username" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="username">Email:</label></td>
+            <td><input type="text" class="form-control" id="email" name="email" placeholder="Email" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="first_name">First Name:</label></td>
+            <td><input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="last_name">Last Name:</label></td>
+            <td><input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password:</label></td>
+            <td><input type="password" class="form-control" id="password" name="password" placeholder="Password" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="confirm_password">Confirm Password:</label></td>
+            <td><input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required="required" /></td>
+        </tr>
+        <tr>
+            <td><label for="roles">Role:</label></td>
+            <td>
+                <select id="roles" name="access_level" class="form-control">
+                    <option value="0">None</option>
+                    <option value="1">View</option>
+                    <option value="2">Edit</option>
+                    <option value="3">Admin</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="organizations">Organization:</label></td>
+            <td>
+                @organization.name
+            </td>
+        </tr>
+    </table>
+    <br /><br />
+    <input type="submit" class="pull-right btn btn-primary" value="Save User" />
+    <div style="clear:both;"></div>
+</form>

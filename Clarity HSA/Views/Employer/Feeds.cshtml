@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "Feeds";
+
+    int organization_id = (int)Session["active_organization"];
+    var organization = (Clarity_HSA.Models.Organization)@ViewData["organization"];
+}
+
+<h3>Inbound Feeds</h3>
+
+<br />
+
+@if (organization_id > 0)
+{
+    <form id="quadrant_1_select" action="/Employer/FeedUpdate" method="post">
+        <div class="form-group">
+            <label for="alegeus_feed">Alegeus IL Composite File Location:</label>
+            <input type="text" class="form-control" name="alegeus_feed" id="alegeus_feed" placeholder="C:\File\Location" value="@organization.organization_settings.alegeus_feed">
+        </div>
+        <div class="form-group" style="display:none;">
+            <label for="demographics_feed">Beneflex Demographics File Location:</label>
+            <input type="text" class="form-control" name="demographics_feed" id="demographics_feed" placeholder="C:\File\Location" value="@organization.organization_settings.demographics_feed">
+        </div>
+        <div class="form-group" style="display:none;">
+            <label for="deposits_feed">Beneflex Repayment File Location:</label>
+            <input type="text" class="form-control" name="deposits_feed" id="deposits_feed" placeholder="C:\File\Location" value="@organization.organization_settings.deposits_feed">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Update" />
+    </form>
+
+    <br />
+    <h4>Incoming and Outgoing File History</h4>
+
+    <br />
+    <table class="table table-bordered table-striped table-hover">
+        <tr>
+            <th>Feed</th>
+            <th>Direction</th>
+            <th>Timestamp</th>
+            <th>Result</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (Clarity_HSA.Models.FeedLog log in (List< Clarity_HSA.Models.FeedLog>)ViewData["logs"])
+        {
+                <tr>
+                    <td>@log.feed_name</td>
+                    <td>@log.feed_direction</td>
+                    <td>@log.feed_timestamp</td>
+                    <td>
+                        @if (log.successful)
+                        {
+                            <span>Success</span>
+                        }
+                        else
+                        {
+                            <span>Failure</span>
+                        }
+                    </td>
+                    <td><a href="/Employer/FeedLog/@log.Id" class="btn btn-default">View Detailed Log</a></td>
+                </tr>
+        }
+    </table>
+
+    <br />
+    <a href="/Employer/ImportFeeds" class="btn btn-success">Import Latest Feeds</a>
+}
+else
+{
+    <h4 style="text-align:center;">You must select an individual organization to view and configure feed settings!</h4>
+    <br /><br />
+    <center>
+        <p>If you import a feed for an organization that contains records for child organizations, those will be imported as well. So to import a global file, import the feed to the Clarity organization, which is the parent of all other organizations in the system.</p>
+    </center>
+
+    <br /><br />
+    <h4>Incoming and Outgoing File History</h4>
+
+    <br />
+    <table class="table table-bordered table-striped table-hover">
+        <tr>
+            <th>Feed</th>
+            <th>Direction</th>
+            <th>Timestamp</th>
+            <th>Result</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (Clarity_HSA.Models.FeedLog log in (List<Clarity_HSA.Models.FeedLog>)ViewData["logs"])
+        {
+            <tr>
+                <td>@log.feed_name</td>
+                <td>@log.feed_direction</td>
+                <td>@log.feed_timestamp</td>
+                <td>
+                    @if (log.successful)
+                    {
+                        <span>Success</span>
+                    }
+                    else
+                    {
+                        <span>Failure</span>
+                    }
+                </td>
+                <td><a href="/Employer/FeedLog/@log.Id" class="btn btn-default">View Detailed Log</a></td>
+            </tr>
+        }
+    </table>
+}

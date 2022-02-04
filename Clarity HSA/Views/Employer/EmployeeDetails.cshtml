@@ -1,0 +1,212 @@
+﻿
+@{
+    ViewBag.Title = "Employee Details";
+
+    var employee = (Clarity_HSA.Models.User)@ViewData["employee"];
+}
+
+<h3>@employee.first_name @employee.last_name</h3>
+
+<br />
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Employee Details</a></li>
+        <li role="presentation"><a href="#loans" aria-controls="loans" role="tab" data-toggle="tab">Advances/Balances</a></li>
+        <li role="presentation"><a href="#charges" aria-controls="charges" role="tab" data-toggle="tab">Charges</a></li>
+        <li role="presentation"><a href="#deposits" aria-controls="deposits" role="tab" data-toggle="tab">Repayments</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home" style="padding:20px;">
+            <br />
+            <div class="col-md-4">
+                <form method="post" action="/Employer/UpdateEmployee">
+                    <input type="hidden" name="employee_id" value="@employee.id" />
+                    <table class="table col-md-4">
+                        <tr>
+                            <td><b>First Name</b></td>
+                            <td><input type="text" class="form-control" name="first_name" value="@employee.first_name" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Last Name</b></td>
+                            <td><input type="text" class="form-control" name="last_name" value="@employee.last_name" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Status</b></td>
+                            <td><input type="text" class="form-control" name="status" value="@employee.employee.status" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Terminated</b></td>
+                            <td>
+                                @if (employee.employee.terminated)
+                                {
+                                    <span>True</span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        False
+                                        <br />
+                                        <a href="/Employer/Terminate/@employee.id" class="btn btn-danger btn-sm">Terminate</a>
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>DOB</b></td>
+                            <td>@employee.employee.dob.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <td><b>Company ID</b></td>
+                            <td><input type="text" class="form-control" name="company_identifier" value="@employee.employee.company_identifier" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Payroll ID</b></td>
+                            <td><input type="text" class="form-control" name="payroll_identifier" value="@employee.employee.payroll_identifier" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Social Security Number</b></td>
+                            <td><a href="#" title="@employee.employee.social_security_num">xxx-xx-@employee.employee.social_security_last_four</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>Employer</b></td>
+                            <td>@employee.roles.First().organization.name</td>
+                        </tr>
+                        <tr>
+                            <td><b>Email</b></td>
+                            <td><input type="text" class="form-control" name="email" value="@employee.email" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Address</b></td>
+                            <td><input type="text" class="form-control" name="address" value="@employee.employee.address" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>City</b></td>
+                            <td><input type="text" class="form-control" name="city" value="@employee.employee.city" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>State</b></td>
+                            <td><input type="text" class="form-control" name="state" value="@employee.employee.state" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Zip</b></td>
+                            <td><input type="text" class="form-control" name="zip" value="@employee.employee.zip" /></td>
+                        </tr>
+                        <!--tr>
+                            <td><b></b></td>
+                            <td>@employee.employee.city, @employee.employee.state @employee.employee.zip</td>
+                        </tr-->
+                    </table>
+                    <br /><br />
+                    <input type="submit" value="Update Employee" class="btn btn-primary" />
+                </form>
+            </div>
+            <div class="col-md-4">
+                <table class="table col-md-4">
+                    <tr>
+                        <td><b>HSA Balance</b></td>
+                        <td>$@employee.employee.hsa_balance.ToString("#,##0.00")</td>
+                    </tr>
+                    <tr>
+                        <td><b>Maximum Advance Amount</b></td>
+                        <td>$@employee.employee.maximum_advance_amount.ToString("#,##0.00")</td>
+                    </tr>
+                    <tr>
+                        <td><b>Available Advance Balance</b></td>
+                        @if (employee.employee.loans.Count > 0)
+                        {
+                            <td>$@((employee.employee.maximum_advance_amount - employee.employee.loans.First<Clarity_HSA.Models.Loan>().balance).ToString("#,##0.00"))</td>
+                        }
+                        else
+                        {
+                            <td>$@employee.employee.maximum_advance_amount.ToString("#,##0.00")</td>
+                        }
+                    </tr>
+                    <tr>
+                        <td><b>Transactions To Date</b></td>
+                        <td>$@ViewData["transactions_to_date"]</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="loans" style="padding:20px;">
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Advance ID</th>
+                    <th>Balance</th>
+                    <th>Monthly Payment</th>
+                    <th>Last Payment Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                @foreach (Clarity_HSA.Models.Loan loan in employee.employee.loans)
+                {
+                    <tr>
+                        <td><span id="loan_id_@loan.loan_id" style="display:none;">@loan.loan_id</span><a href="#" id="loan_id_show_btn_@loan.loan_id" class="btn btn-sm btn-primary" onclick="$(this).hide(); $('#loan_id_@loan.loan_id').show(); $('#loan_id_hide_btn_@loan.loan_id').show();">Show</a><a href="#" id="loan_id_hide_btn_@loan.loan_id" style="display:none;" class="btn btn-sm btn-primary" onclick="$(this).hide(); $('#loan_id_@loan.loan_id').hide(); $('#loan_id_show_btn_@loan.loan_id').show();">Hide</a></td>
+                        <td>$@loan.balance.ToString("#,##0.00")</td>
+                        <td>$@loan.monthly_payment.ToString("#,##0.00")</td>
+                        <td>@loan.last_payment_date</td>
+                        <td>
+                            @if (loan.balance > 0)
+                            {
+                                <span>Current</span>
+                            }
+                            else
+                            {
+                                <span>Paid</span>
+                            }
+                        </td>
+                        <td><a href="/Employer/LoanDetails/@loan.id" class="btn btn-default">View Details</a></td>
+                    </tr>
+                }
+            </table>
+            <br /><br />
+            <b>HSA Balance</b>
+            <br />
+            $@employee.employee.hsa_balance.ToString("#,##0.00")
+        </div>
+        <div role="tabpanel" class="tab-pane" id="charges" style="padding:20px;">
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Claim Type</th>
+                    <th>Description</th>
+                    <th>Total Claim Amount</th>
+                    <th>Approved Amount</th>
+                </tr>
+                @foreach (Clarity_HSA.Models.Charge charge in employee.employee.charges)
+                {
+                    <tr>
+                        <td>@charge.transaction_date.ToShortDateString()</td>
+                        <td>@charge.claim_type</td>
+                        <td>@charge.description</td>
+                        <td>$@charge.total_claim_amount.ToString("#,##0.00")</td>
+                        <td>$@charge.approved_amount.ToString("#,##0.00")</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="deposits" style="padding:20px;">
+            <br />
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Payroll Date</th>
+                    <th>Employee Contribution</th>
+                    <th>Repayment Type</th>
+                </tr>
+                @foreach (Clarity_HSA.Models.Deposit deposit in employee.employee.deposits)
+                {
+                    <tr>
+                        <td>@deposit.payroll_date.ToShortDateString()</td>
+                        <td>$@deposit.employee_contribution.ToString("#,##0.00")</td>
+                        <td>@deposit.deposit_type</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

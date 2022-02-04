@@ -1,0 +1,1664 @@
+﻿
+@{
+    ViewBag.Title = "Feed Details";
+
+    var report = (Clarity_HSA.Models.Report)@ViewData["report"];
+    var fields = (Clarity_HSA.Models.Field[])@ViewData["fields"];
+    var contacts = (Clarity_HSA.Models.Role[])@ViewData["contacts"];
+
+    var root_sortable = (report.report_entities.Count != 0) ? "" : "sortable";
+}
+
+<div class="modal fade" id="add_field" tabindex="-1" role="dialog" aria-labelledby="modal_label">
+    <div class="modal-dialog" role="document">
+        <form action="/ReportBuilder/AddFieldElement" method="post">
+            <input type="hidden" name="report_id" value="@report.id" />
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal_label">Add New Field Element</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" name="field_element_name" placeholder="Field Element Name" />
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Add" />
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--h3>Edit Feed</h3-->
+<form id="report_details" action="/ReportBuilder/ReportSave" method="post">
+    <input type="hidden" name="report_id" value="@report.id" />
+    <input type="hidden" name="entities_json" id="entities_json" value="" />
+    <input type="hidden" name="current_tab" id="current_tab" value="" />
+    <input type="hidden" name="search_text" id="search_text" value="" />
+    <input type="hidden" name="left_scroll" id="left_scroll" value="" />
+    <input type="hidden" name="right_scroll" id="right_scroll" value="" />
+    <input type="hidden" name="page" value="1" />
+    <input name="report_name" type="text" class="form-control" value="@report.name" placeholder="Report Name" />
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" id="tab_loops" class="elemement_tab active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" onclick="set_tab('tab_loops');">Loops</a></li>
+                <li role="presentation" id="tab_operators" class="elemement_tab"><a href="#grouping" aria-controls="grouping" role="tab" data-toggle="tab" onclick="set_tab('tab_operators');">Operators</a></li>
+                <li role="presentation" id="tab_conditions" class="elemement_tab"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab" onclick="set_tab('tab_conditions');">Conditions</a></li>
+                <li role="presentation" id="tab_fields" class="elemement_tab"><a href="#scheduling" aria-controls="scheduling" role="tab" data-toggle="tab" onclick="set_tab('tab_fields');">Fields</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home" style="padding:20px;">
+                    <br />
+                    <input class="form-control" id="loop_search" placeholder="Search..." onkeyup="search_elements('search_element_loop', $('#loop_search').val());" />
+                    <br />
+                    <table class="table table-condensed table-bordered table-striped table-hover available-element-table">
+                        <tr>
+                            <th></th>
+                            <th>Available Loop Elements</th>
+                        </tr>
+                        @foreach (Clarity_HSA.Models.AvailableEntity entity in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                        {
+                            if (entity.entity_type == "Loop" || entity.entity_type == "Section" || entity.entity_type == "Terminate Loop")
+                            {
+                                <tr class="draggable search_element_loop" report_element_type="@entity.entity_type" report_element_valid_parent_type="@entity.valid_parent_type" report_element_id="@entity.id" report_element_caption="@entity.name" search_terms="@entity.name">
+                                    <td class="handle"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></td>
+                                    <td class="report_element_label">@entity.name</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="grouping" style="padding:20px;">
+                    <br />
+                    <input class="form-control" id="operator_search" placeholder="Search..." onkeyup="search_elements('search_element_operator', $('#operator_search').val());" />
+                    <br />
+                    <table class="table table-condensed table-bordered table-striped table-hover available-element-table">
+                        <tr>
+                            <th></th>
+                            <th>Available Operator Elements</th>
+                        </tr>
+                        @foreach (Clarity_HSA.Models.AvailableEntity entity in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                        {
+                            if (entity.entity_type == "Operator")
+                            {
+                                <tr class="draggable search_element_operator" report_element_type="@entity.entity_type" report_element_valid_parent_type="@entity.valid_parent_type" report_element_id="@entity.id" report_element_caption="@entity.name" search_terms="@entity.name">
+                                    <td class="handle"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></td>
+                                    <td class="report_element_label">@entity.name</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="profile" style="padding:20px;">
+                    <br />
+                    <input class="form-control" id="condition_search" placeholder="Search..." onkeyup="search_elements('search_element_condition', $('#condition_search').val());" />
+                    <br />
+                    <table class="table table-condensed table-bordered table-striped table-hover available-element-table">
+                        <tr>
+                            <th></th>
+                            <th>Available Condition Elements</th>
+                        </tr>
+                        @foreach (Clarity_HSA.Models.AvailableEntity entity in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                        {
+                            if (entity.entity_type == "Condition")
+                            {
+                                <tr class="draggable search_element_condition" report_element_type="@entity.entity_type" report_element_valid_parent_type="@entity.valid_parent_type" report_element_id="@entity.id" report_element_caption="@entity.name" search_terms="@entity.name">
+                                    <td class="handle"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></td>
+                                    <td class="report_element_label">@entity.name</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="scheduling" style="padding:20px; height: calc(100vh - 300px); overflow-y: scroll;">
+                    <br />
+                    <input class="form-control" id="field_search" placeholder="Search..." onkeyup="search_elements('search_element_field', $('#field_search').val());" />
+                    <br />
+                    <table class="table table-condensed table-bordered table-striped table-hover available-element-table">
+                        <tr>
+                            <th></th>
+                            <th>Available Field Elements</th>
+                        </tr>
+                        @foreach (Clarity_HSA.Models.AvailableEntity entity in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                        {
+                            if (entity.entity_type == "Field" || entity.entity_type == "Literal" || entity.entity_type == "Calculated Field" || entity.entity_type == "Join Field" || entity.entity_type == "Mapped Field" || entity.entity_type == "Change Type" || entity.entity_type == "New Line")
+                            {
+                                <tr class="draggable search_element_field" report_element_type="@entity.entity_type" report_element_valid_parent_type="@entity.valid_parent_type" report_element_id="@entity.id" report_element_caption="@entity.name" search_terms="@entity.name">
+                                    <td class="handle"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></td>
+                                    <td class="report_element_label">@entity.name</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            <br />
+            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add_field">Add New Field Element</a>
+        </div>
+        <div class="col-md-9">
+            <div id="report_scroller" style="padding:20px; height: calc(100vh - 230px); overflow-y: scroll;">
+                <table class="table table-condensed table-bordered table-hover report_table root_table">
+                    <!--tr>
+                        <th></th>
+                        <th></th>
+                        <th style="display:none;"></th>
+                    </tr-->
+                    <tbody class="@root_sortable" indent_level="0" report_element_type="Root" report_element_valid_parent_type="none" report_element_id="-1">
+                        @helper renderEntity(Clarity_HSA.Models.ReportEntity entity)
+                        {
+Guid guid = Guid.NewGuid();
+
+    <tr report_element_type="@entity.available_entity.entity_type" report_element_valid_parent_type="@entity.available_entity.valid_parent_type" report_element_id="@entity.available_entity.id" report_element_caption="@entity.caption" indent_level="@entity.indentation_level">
+        <td class="handle" style="width:35px;">
+            <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            <br /><br />
+            @if (entity.available_entity.entity_type != "Field" && entity.available_entity.entity_type != "Literal" && entity.available_entity.entity_type != "Calculated Field" && entity.available_entity.entity_type != "Join Field" && entity.available_entity.entity_type != "Mapped Field" && entity.available_entity.entity_type != "Change Type" && entity.available_entity.entity_type != "New Line" && entity.available_entity.entity_type != "Terminate Loop")
+            {
+                if (entity.collapsed)
+                {
+                    <a href="#" class="btn btn-link" style="padding:0;" onclick="$(this).find('span').toggleClass('glyphicon-chevron-down'); $(this).find('span').toggleClass('glyphicon-chevron-right'); $('#element_table_@guid').toggle();"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+                }
+                else
+                {
+                    <a href="#" class="btn btn-link" style="padding:0;" onclick="$(this).find('span').toggleClass('glyphicon-chevron-down'); $(this).find('span').toggleClass('glyphicon-chevron-right'); $('#element_table_@guid').toggle();"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
+                }
+            }
+        </td>
+        <td class="report_element_label" style="padding-left: 20px;">
+            @if (entity.available_entity.entity_type == "Condition" || entity.available_entity.entity_type == "Section" || entity.available_entity.entity_type == "Loop" || entity.available_entity.entity_type == "Operator")
+            {
+                <div style="background-color:#eee; padding-top:5px; padding-bottom:5px; padding-left:10px; padding-right:10px; font-weight:bold;">
+                    @entity.available_entity.name
+                    <div style="float:right;">@entity.available_entity.entity_type</div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="height:7px;"></div>
+            }
+            else
+            {
+                @entity.available_entity.name
+                <div style="float:right;">@entity.available_entity.entity_type</div>
+                <div style="clear:both;"></div>
+                <div style="height:7px;"></div>
+            }
+            @if (entity.available_entity.entity_type == "Condition" || entity.available_entity.entity_type == "Literal" || entity.available_entity.entity_type == "Field" || entity.available_entity.entity_type == "Section" || entity.available_entity.entity_type == "Calculated Field" || entity.available_entity.entity_type == "Mapped Field" || entity.available_entity.entity_type == "Join Field")
+            {
+                <span><a href="#" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#field_options_@guid">Options</a>&nbsp;</span>
+                <div class="modal fade" id="field_options_@guid" tabindex="-1" role="dialog" aria-labelledby="modal_label">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="modal_label">Field Settings: @entity.available_entity.name</h4>
+                            </div>
+                            <div class="modal-body">
+                                @if (entity.available_entity.entity_type == "Condition")
+                                {
+                                    <table class="table table-condensed">
+                                        @if (entity.available_entity.name == "Boolean Expression")
+                                        {
+                                            <tr style="display:none;">
+                                                <td>Condition Field:</td>
+                                                <td>
+                                                    <select class="form-control entity_option">
+                                                        @foreach (Clarity_HSA.Models.AvailableEntity entity2 in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                                                        {
+                                                            if (entity2.entity_type == "Field")
+                                                            {
+                                                                if (@entity.option == @entity2.name)
+                                                                {
+                                                                    <option value="@entity2.name" selected="selected">@entity2.name</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@entity2.name">@entity2.name</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr><td>Condition Value:</td><td><textarea class="form-control entity_literal_value">@entity.literal_value</textarea></td></tr>
+                                        }
+                                        else if (entity.available_entity.name == "Field Change")
+                                        {
+                                            <!--tr>
+                                                <td>Condition Field:</td>
+                                                <td>
+                                                    <select class="form-control entity_option">
+                                                        @foreach (Clarity_HSA.Models.AvailableEntity entity2 in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                                                        {
+                                                            if (entity2.entity_type == "Field")
+                                                            {
+                                                                if (@entity.option == @entity2.name)
+                                                                {
+                                                                    <option value="@entity2.name" selected="selected">@entity2.name</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@entity2.name">@entity2.name</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr style="display:none;"><td>Condition Value:</td><td><input type="text" class="form-control entity_literal_value" value="@entity.literal_value" /></td></tr-->
+                                            <tr>
+                                                <td>Condition Fields:</td>
+                                                <td><textarea class="form-control entity_option">@entity.option</textarea></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Unique Identifier:</td>
+                                                <td><textarea class="form-control entity_literal_value">@entity.literal_value</textarea></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>Condition Field:</td>
+                                                <td>
+                                                    <select class="form-control entity_option">
+                                                        @foreach (Clarity_HSA.Models.AvailableEntity entity2 in (List<Clarity_HSA.Models.AvailableEntity>)@ViewData["available_entities"])
+                                                        {
+                                                            if (entity2.entity_type == "Field")
+                                                            {
+                                                                if (@entity.option == @entity2.name)
+                                                                {
+                                                                    <option value="@entity2.name" selected="selected">@entity2.name</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@entity2.name">@entity2.name</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr><td>Condition Value:</td><td><input type="text" class="form-control entity_literal_value" value="@entity.literal_value" /></td></tr>
+                                        }
+                                    </table>
+                                }
+                                else if (entity.available_entity.entity_type == "Literal")
+                                {
+                                    <table class="table table-condensed"><tr><td>Literal Value (Max 30 Characters):</td><td><input id="literal_value_input_@guid" type="text" class="form-control entity_literal_value" value="@entity.literal_value" maxlength="30" /></td></tr></table>
+                                }
+                                else if (entity.available_entity.entity_type == "Calculated Field")
+                                {
+                                    <table class="table table-condensed">
+                                        <tr><td></td><td>Calculation Formula:</td><td><input id="literal_value_input_@guid" type="text" class="form-control entity_literal_value" value="@entity.literal_value" /></td></tr>
+                                            <tr>
+                                                <td>
+                                                    @if (entity.format_option_currency == 1)
+                                                    {
+                                                        <input type="checkbox" class="format_option_currency" checked="checked" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="format_option_currency" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    Format as Number
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control format_option_currency_format" placeholder="Specify Format" value="@entity.format_option_currency_format" />
+                                                </td>
+                                            </tr>
+                                    </table>
+                                    <p>
+                                        <br /><br />
+                                        <b>Example:</b><br />
+                                        {Employee: Salary}/12<br />
+                                    </p>
+                                }
+                                else if (entity.available_entity.entity_type == "Mapped Field")
+                                {
+                                    <p>Specify mappings below, one mapping per line, using  the | delimiter.</p>
+                                    <textarea class="form-control entity_map_json">@entity.map_json</textarea>
+                                                        <p>
+                                                            <br /><br />
+                                                            <b>Example:</b><br />
+                                                            {Employee: TobaccoUser} == true && {Employee: USCitizen} == true | Smoker<br />
+                                                            {Employee: TobaccoUser} == true && {Employee: USCitizen} == true | Non Smoker<br />
+                                                            {Employee: TobaccoUser} == * && {Employee: USCitizen} == * | N/A<br />
+                                                        </p>
+                                }
+                                else if (entity.available_entity.entity_type == "Join Field")
+                                {
+                                    <input class="form-control entity_option" placeholder="Entity Name" value="@entity.option" /><br />
+                                    <input class="form-control format_option_remove_characters_list" placeholder="Common Fields (Comma Separated)" value="@entity.format_option_remove_characters_list" /><br />
+                                    <input class="form-control entity_map_json" placeholder="Render Field" value="@entity.map_json" /><br />
+                                }
+                                else if (entity.available_entity.entity_type == "Field")
+                                {
+                                    <div>
+                                        <h4>Format Options</h4>
+                                        <table class="table table-condensed">
+                                            <tr>
+                                                <td>
+                                                    @if (entity.format_option_fixed_width == 1)
+                                                    {
+                                                        <input type="checkbox" class="format_option_fixed_width" checked="checked" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="format_option_fixed_width" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    Fixed Width
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control format_option_fixed_width_val" placeholder="Specify Width" value="@entity.format_option_fixed_width_val" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @if (entity.format_option_capitalize_entire_element == 1)
+                                                    {
+                                                        <input type="checkbox" class="format_option_capitalize_entire_element" checked="checked" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="format_option_capitalize_entire_element" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    Capitalize Entire Element
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @if (entity.format_option_remove_characters == 1)
+                                                    {
+                                                        <input type="checkbox" class="format_option_remove_characters" checked="checked" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="format_option_remove_characters" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    Remove Characters
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control format_option_remove_characters_list" placeholder="Specify Characters" value="@entity.format_option_remove_characters_list" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @if (entity.format_option_date == 1)
+                                                    {
+                                                        <input type="checkbox" class="format_option_date" checked="checked" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="format_option_date" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    Format as Date
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control format_option_date_format" placeholder="Specify Format" value="@entity.format_option_date_format" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @if (entity.format_option_currency == 1)
+                                                    {
+                                                        <input type="checkbox" class="format_option_currency" checked="checked" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="format_option_currency" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    Format as Number
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control format_option_currency_format" placeholder="Specify Format" value="@entity.format_option_currency_format" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                }
+                                else if (entity.available_entity.entity_type == "Section")
+                                {
+                                    <table class="table table-condensed"><tr><td>Delimiter:</td><td><input type="text" class="form-control entity_section_delimiter" value="@entity.section_delimiter" /></td></tr></table>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#literal_value_@guid').html($('#literal_value_input_@guid').val())">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <a href="#" class="btn btn-xs btn-danger" onclick="if (confirm('Are you sure you want to delete this element?')) { $(this).parent().parent().remove(); save(); }">Delete</a>
+            @if (entity.available_entity.entity_type != "Field" && entity.available_entity.entity_type != "Literal" && entity.available_entity.entity_type != "Calculated Field" && entity.available_entity.entity_type != "Join Field" && entity.available_entity.entity_type != "Mapped Field" && entity.available_entity.entity_type != "Change Type" && entity.available_entity.entity_type != "New Line" && entity.available_entity.entity_type != "Terminate Loop")
+            {
+                <div style="height:7px;"></div>
+                <table class="table table-condensed table-bordered table-hover report_table" id="element_table_@guid">
+                    <tbody>
+                        <!--tr>
+                            <th></th>
+                            <th></th>
+                            <th style="display:none;"></th>
+                        </tr-->
+                    </tbody>
+                    <tbody class="sortable" indent_level="@entity.indentation_level" report_element_type="@entity.available_entity.entity_type" report_element_valid_parent_type="@entity.available_entity.valid_parent_type" report_element_id="@entity.available_entity.id" field_id="@guid">
+                        @foreach (Clarity_HSA.Models.ReportEntity child_entity in entity.child_entities)
+                        {
+                            @renderEntity(child_entity)
+                        }
+
+                        @if (entity.child_entities.Count == 0)
+                        {
+                            <tr class="placeholder">
+                                <td><br /></td>
+                                <td></td>
+                                <td style="display:none;"></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                if (entity.collapsed)
+                {
+                    <span>
+                        <script type="text/javascript">
+
+                            $("#element_table_@guid").hide();
+
+                        </script>
+                    </span>
+                }
+            }
+            else if (entity.available_entity.entity_type == "Literal" || entity.available_entity.entity_type == "Calculated Field")
+            {
+                <br /><br />
+                <span id="literal_value_@guid">@entity.literal_value</span>
+            }
+
+        </td>
+    </tr>
+}
+
+                        @foreach (Clarity_HSA.Models.ReportEntity entity in report.report_entities)
+                        {
+                            if (entity.parent_entities == null)
+                            {
+                                @renderEntity(entity)
+                            }
+                        }
+
+                        @if (report.report_entities.Count == 0)
+                        {
+                            <tr class="placeholder">
+                                <td><br /></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+
+            function initializeDraggable() {
+                $(".sortable").sortable(
+                {
+                    revert: true,
+                    items: "> tr",
+                    receive: function (event) {
+                        console.log("Receive");
+                    },
+                    update: function (event) {
+                        console.log("Update");
+                    },
+                    stop: function (event) {
+                        console.log("Stop");
+
+                        if (event.type == "sortstop") {
+                            setTimeout(function () {
+                                // $('.root_table').find('.ui-draggable').remove();
+                                save();
+                            },
+                            300);
+                        }
+                    },
+                    handle: ".handle"
+                });
+
+                $(".draggable").draggable(
+                {
+                    connectToSortable: ".sortable",
+                    helper: "clone",
+                    revert: "invalid",
+                    handle: ".handle",
+                    drag: function (event) {
+                        // console.log(event);
+                    },
+                    stop: function (event) {
+                        console.log("Drop");
+
+                        try {
+                            var section_row_index = $(event.toElement).parent().parent().parent().find(".ui-sortable-placeholder")[0].sectionRowIndex;
+                            console.log(section_row_index);
+                        }
+                        catch (ee) {
+                            save();
+                            return;
+                        }
+
+                        var report_element_type = $(event.toElement).parent().parent().attr("report_element_type");
+                        var report_element_valid_parent_type = $(event.toElement).parent().parent().attr("report_element_valid_parent_type");
+                        var report_element_id = $(event.toElement).parent().parent().attr("report_element_id");
+                        var report_element_caption = $(event.toElement).parent().parent().attr("report_element_caption");
+
+                        var parent_type = $(event.toElement).parent().parent().parent().attr("report_element_type");
+
+                        if (parent_type == undefined) {
+                            // debugger;
+                            // $(event.toElement).remove();
+                            save();
+                            return;
+                        }
+
+                        console.log(parent_type);
+
+                        if (report_element_valid_parent_type == "root") {
+                            if (parent_type != "Root") {
+                                alert("This element may only be a child of the root element!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "loop_or_condition_or_section") {
+                            if (parent_type != "Loop" && parent_type != "Operator" && parent_type != "Condition" && parent_type != "Section") {
+                                alert("This element may only be a child of a loop, condition, operator, or section!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "loop_or_condition") {
+                            if (parent_type != "Loop" && parent_type != "Operator" && parent_type != "Condition") {
+                                alert("This element may only be a child of a loop, condition or operator!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "loop") {
+                            if (parent_type != "Loop") {
+                                alert("This element may only be a child of a loop!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "loop_or_section") {
+                            if (parent_type != "Loop" && parent_type != "Section") {
+                                alert("This element may only be a child of a loop or section!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "condition") {
+                            if (parent_type != "Condition") {
+                                alert("This element may only be a child of a condition!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "operator") {
+                            if (parent_type != "Operator") {
+                                alert("This element may only be a child of a operator!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+                        else if (report_element_valid_parent_type == "section") {
+                            if (parent_type != "Section") {
+                                alert("This element may only be a child of a section!");
+                                $(event.toElement).parent().parent().remove();
+                                return;
+                            }
+                        }
+
+                        $(event.toElement).parent().parent().parent().find(".placeholder").remove();
+
+                        var indent_level = parseInt($(event.toElement).parent().parent().parent().attr("indent_level")) + 1;
+                        indent_level = 1;
+                        $(event.toElement).parent().parent().attr("indent_level", indent_level);
+
+                        var field_name = $(event.toElement).parent().parent().find('.report_element_label').first().html();
+                        var field_id = guid();
+                        var modal_body = '';
+                        var modal = '';
+                        var options = '';
+
+                        if ($(event.toElement).parent().parent().attr("report_element_type") == "Condition" || $(event.toElement).parent().parent().attr("report_element_type") == "Literal") {
+                            options = '<a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#field_options_' + field_id + '">Options</a>';
+
+                            if ($(event.toElement).parent().parent().attr("report_element_type") == "Condition") {
+                                modal_body = '<table class="table table-condensed"><tr><td>Condition Value:</td><td><input type="text" class="form-control" value="" /></td></tr></table>';
+                            }
+                            else if ($(event.toElement).parent().parent().attr("report_element_type") == "Literal") {
+                                modal_body = '<table class="table table-condensed"><tr><td>Literal Value:</td><td><input type="text" class="form-control entity_literal_value" value="" /></td></tr></table>';
+                            }
+                            else if ($(event.toElement).parent().parent().attr("report_element_type") == "Section") {
+                                modal_body = '<table class="table table-condensed"><tr><td>Section Delimiter:</td><td><input type="text" class="form-control entity_section_delimiter" value="," /></td></tr></table>';
+                            }
+
+                            modal = '<div class="modal fade" id="field_options_' + field_id + '" tabindex="-1" role="dialog" aria-labelledby="modal_label"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="modal_label">Field Settings: ' + field_name + '</h4></div><div class="modal-body">' + modal_body + '</div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div>';
+                        }
+
+                        if (report_element_type != "Field" && report_element_type != "Literal") $(event.toElement).parent().parent().find('.report_element_label').first().html($(event.toElement).parent().parent().find('.report_element_label').first().html() + '<br /><br /><table class="table table-condensed table-bordered table-hover report_table"><tr><th></th><th>Element</th><th>Type</th></tr><tbody class="sortable" indent_level="' + indent_level + '" report_element_type="' + report_element_type + '" report_element_valid_parent_type="' + report_element_valid_parent_type + '" report_element_id="' + report_element_id + '" field_id="' + field_id + '"><tr class="placeholder"><td><br /></td><td></td><td></td></tr></tbody></table>')
+
+                        $(event.toElement).parent().parent().append('<td>' + $(event.toElement).parent().parent().attr("report_element_type") + '<br /><br />' + options + modal + '<br /><br /><a href="#" class="btn btn-sm btn-danger" onclick="$(this).parent().parent().remove();">Delete</a></td>');
+                        // $(event.toElement).parent().parent().parent().find('> tr:nth-child(' + section_row_index + ')').after($(event.toElement).parent().parent()[0].outerHTML);
+                        $(event.toElement).parent().parent().find('.report_element_label').first().css("padding-left", indent_level * 20 + "px");
+
+                        // initializeDraggable();
+
+                        save();
+                    }
+                });
+
+                $("ul,li").disableSelection();
+            }
+
+            $(function () {
+                initializeDraggable();
+            });
+
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+            }
+
+            function guid() {
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+            }
+
+            function getChildEntities(report_table) {
+                var entities = [];
+
+                console.log($(report_table).find("> tbody > tr"));
+                $(report_table).find("> tbody > tr").each(function (index) {
+                    if ($(this).attr("report_element_id") !== undefined) {
+                        if (!$(this).hasClass("ui-sortable-helper")) {
+                            var entity = {};
+                            entity.indentation_level = 1;
+                            entity.caption = $(this).attr("report_element_caption");
+                            entity.format = "String";
+                            entity.literal_value = $(this).find(".entity_literal_value").first().val();
+                            entity.section_delimiter = $(this).find(".entity_section_delimiter").first().val();
+                            entity.option = $(this).find(".entity_option").first().val();
+                            entity.available_entity_id = $(this).attr("report_element_id");
+                            entity.child_entities = getChildEntities($(this).find(".report_element_label").first().find(".report_table").first());
+                            entity.map_json = $(this).find(".entity_map_json").first().val();
+                            entity.format_option_fixed_width = $(this).find(".format_option_fixed_width").first().is(':checked') ? 1 : 0;
+                            entity.format_option_fixed_width_val = $(this).find(".format_option_fixed_width_val").first().val();
+                            entity.format_option_capitalize_entire_element = $(this).find(".format_option_capitalize_entire_element").first().is(':checked') ? 1 : 0;
+                            entity.format_option_remove_characters = $(this).find(".format_option_remove_characters").first().is(':checked') ? 1 : 0;
+                            entity.format_option_remove_characters_list = $(this).find(".format_option_remove_characters_list").first().val();
+                            entity.format_option_date = $(this).find(".format_option_date").first().is(':checked') ? 1 : 0;
+                            entity.format_option_date_format = $(this).find(".format_option_date_format").first().val();
+                            entity.format_option_currency = $(this).find(".format_option_currency").first().is(':checked') ? 1 : 0;
+                            entity.format_option_currency_format = $(this).find(".format_option_currency_format").first().val();
+                            entity.collapsed = $(this).find(".report_element_label").first().find(".report_table").first().css("display") == "none" ? 1 : 0;
+
+                            entities.push(entity);
+                        }
+                    }
+                    else if ($(this).hasClass('ui-sortable-placeholder')) {
+                        $(report_table).find("> tbody > .ui-sortable-helper").each(function (index) {
+                            var entity = {};
+                            entity.indentation_level = 1;
+                            entity.caption = $(this).attr("report_element_caption");
+                            entity.format = "String";
+                            entity.literal_value = $(this).find(".entity_literal_value").first().val();
+                            entity.section_delimiter = $(this).find(".entity_section_delimiter").first().val();
+                            entity.option = $(this).find(".entity_option").first().val();
+                            entity.available_entity_id = $(this).attr("report_element_id");
+                            entity.child_entities = getChildEntities($(this).find(".report_element_label").first().find(".report_table").first());
+                            entity.map_json = $(this).find(".entity_map_json").first().val();
+                            entity.format_option_fixed_width = $(this).find(".format_option_fixed_width").first().is(':checked') ? 1 : 0;
+                            entity.format_option_fixed_width_val = $(this).find(".format_option_fixed_width_val").first().val();
+                            entity.format_option_capitalize_entire_element = $(this).find(".format_option_capitalize_entire_element").first().is(':checked') ? 1 : 0;
+                            entity.format_option_remove_characters = $(this).find(".format_option_remove_characters").first().is(':checked') ? 1 : 0;
+                            entity.format_option_remove_characters_list = $(this).find(".format_option_remove_characters_list").first().val();
+                            entity.format_option_date = $(this).find(".format_option_date").first().is(':checked') ? 1 : 0;
+                            entity.format_option_date_format = $(this).find(".format_option_date_format").first().val();
+                            entity.format_option_currency = $(this).find(".format_option_currency").first().is(':checked') ? 1 : 0;
+                            entity.format_option_currency_format = $(this).find(".format_option_currency_format").first().val();
+                            entity.collapsed = $(this).find(".report_element_label").first().find(".report_table").first().css("display") == "none" ? 1 : 0;
+
+                            entities.push(entity);
+                        });
+                    }
+                });
+
+                return entities;
+            }
+
+            var saved_once = false;
+
+            function save()
+            {
+                if (saved_once) return;
+
+                saved_once = true;
+                var entities = getChildEntities($(".root_table").first());
+                var entities_obj = {};
+                entities_obj.entities = entities;
+                $("#entities_json").val(JSON.stringify(entities_obj));
+                $("#current_tab").val(current_tab);
+                if (current_tab == "tab_loops") $("#search_text").val($("#loop_search").val());
+                if (current_tab == "tab_operators") $("#search_text").val($("#operator_search").val());
+                if (current_tab == "tab_conditions") $("#search_text").val($("#condition_search").val());
+                if (current_tab == "tab_fields") $("#search_text").val($("#field_search").val());
+                $("#left_scroll").val(document.getElementById("scheduling").scrollTop);
+                $("#right_scroll").val(document.getElementById("report_scroller").scrollTop);
+
+                $("#report_details").submit();
+            }
+
+            var current_tab = "@ViewData["current_tab"]";
+            $('#' + current_tab + ' a').tab('show');
+            if (current_tab == "tab_loops") { $("#loop_search").val("@ViewData["search_text"]"); search_elements('search_element_loop', $('#loop_search').val()); }
+            if (current_tab == "tab_operators") { $("#operator_search").val("@ViewData["search_text"]"); search_elements('search_element_operator', $('#operator_search').val()); }
+            if (current_tab == "tab_conditions") { $("#condition_search").val("@ViewData["search_text"]"); search_elements('search_element_condition', $('#condition_search').val()); }
+            if (current_tab == "tab_fields") { $("#field_search").val("@ViewData["search_text"]"); search_elements('search_element_field', $('#field_search').val()); }
+            document.getElementById("scheduling").scrollTop = @ViewData["left_scroll"];
+            document.getElementById("report_scroller").scrollTop = @ViewData["right_scroll"];
+
+            function set_tab(tab) {
+                current_tab = tab;
+            }
+
+            function search_elements(tr_class, search_terms) {
+                $('.' + tr_class).hide();
+
+                if (search_terms == "") {
+                    $('.' + tr_class).show();
+                }
+                else {
+                    $('.' + tr_class).each(function (index) {
+                        if ($(this).attr('search_terms').toLowerCase().includes(search_terms.toLowerCase())) {
+                            $(this).show();
+                        }
+                    });
+                }
+            }
+
+        </script>
+    </div>
+    <br />
+    <div class="pull-left">
+        <a href="#" class="btn btn-primary" onclick="save();">Save Report</a>
+    </div>
+    <div class="pull-right">
+        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#report_settings">Report Settings</a>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="modal fade" id="report_settings" tabindex="-1" role="dialog" aria-labelledby="modal_label">
+        <div class="modal-dialog" role="document" style="width:50%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal_label">Report Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#format_and_delivery" aria-controls="format_and_delivery" role="tab" data-toggle="tab">Format and Delivery</a></li>
+                        <li role="presentation"><a href="#834_txt_options" aria-controls="834_txt_options" role="tab" data-toggle="tab">834 Options</a></li>
+                        <li role="presentation"><a href="#headers_footers" aria-controls="headers_footers" role="tab" data-toggle="tab">Headers/Footers</a></li>
+                        <li role="presentation"><a href="#report_scheduling" aria-controls="report_scheduling" role="tab" data-toggle="tab">Scheduling</a></li>
+                    
+                        @if (report.organization == null)
+                        {
+                            <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">Report Access</a></li>
+                        }
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="format_and_delivery" style="padding:20px;">
+                            <table class="table table-condensed table-bordered table-striped table-hover">
+                                <tr>
+                                    <th>Output Format</th>
+                                    <th>Delivery Type</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="radio">
+                                            @if (report.output_format == "excel")
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_1" value="excel" checked> Excel</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_1" value="excel"> Excel</label>
+                                            }
+                                        </div>
+                                        <div class="radio" style="display:none;">
+                                            @if (report.output_format == "csv")
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_2" value="csv" checked> CSV</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_2" value="csv"> CSV</label>
+                                            }
+                                        </div>
+                                        <div class="radio">
+                                            @if (report.output_format == "txt")
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_3" value="txt" checked> TXT</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_3" value="txt"> TXT</label>
+                                            }
+                                        </div>
+                                        <div class="radio">
+                                            @if (report.output_format == "pdf")
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_4" value="pdf" checked> PDF</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_4" value="pdf"> PDF</label>
+                                            }
+                                        </div>
+                                        <div class="radio">
+                                            @if (report.output_format == "mbi")
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_5" value="mbi" checked> MBI</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_5" value="mbi"> MBI</label>
+                                            }
+                                        </div>
+                                        <div class="radio">
+                                            @if (report.output_format == "834")
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_5" value="834" checked> 834</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="output_format" id="output_format_5" value="834"> 834</label>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="radio">
+                                            @if (report.delivery_type == "download_file")
+                                            {
+                                                <label><input type="radio" name="delivery_type" id="delivery_type_1" value="download_file" onclick="toggle_delivery_options();" checked> Download File</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="delivery_type" id="delivery_type_1" value="download_file" onclick="toggle_delivery_options();"> Download File</label>
+                                            }
+                                        </div>
+                                        <div id="download_file_options" class="delivery_options">
+                                        </div>
+                                        <div class="radio">
+                                            @if (report.delivery_type == "ftp_sftp")
+                                            {
+                                                <label><input type="radio" name="delivery_type" id="delivery_type_2" value="ftp_sftp" onclick="toggle_delivery_options();" checked> FTP/SFTP</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="delivery_type" id="delivery_type_2" value="ftp_sftp" onclick="toggle_delivery_options();"> FTP/SFTP</label>
+                                            }
+                                        </div>
+                                        <div id="ftp_sftp_options" class="delivery_options">
+                                            <input type="text" name="delivery_ftp_address" class="form-control" placeholder="FTP Address" value="@report.delivery_ftp_address" />
+                                            <input type="text" name="delivery_ftp_username" class="form-control" placeholder="FTP Username" value="@report.delivery_ftp_username" />
+                                            <input type="text" name="delivery_ftp_password" class="form-control" placeholder="FTP Password" value="@report.delivery_ftp_password" />
+                                            <input type="text" name="delivery_ftp_port" class="form-control" placeholder="FTP Port" value="@report.delivery_ftp_port" />
+                                            <input type="text" name="delivery_ftp_path" class="form-control" placeholder="FTP Path" value="@report.delivery_ftp_path" />
+                                        </div>
+                                        <div class="radio">
+                                            @if (report.delivery_type == "secure_email")
+                                            {
+                                                <label><input type="radio" name="delivery_type" id="delivery_type_3" value="secure_email" onclick="toggle_delivery_options();" checked> Secure Email</label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" name="delivery_type" id="delivery_type_3" value="secure_email" onclick="toggle_delivery_options();"> Secure Email</label>
+                                            }
+                                        </div>
+                                        <div id="email_options" class="delivery_options">
+                                            <input type="text" name="delivery_email_address" id="delivery_email_address" class="form-control" placeholder="Email Address" value="@report.delivery_email_address" />
+                                            @if (contacts.Length > 0)
+                                            {
+                                                <br />
+                                                <span>Contact List:</span>
+                                                <br />
+                                                <select class="form-control" id="contacts" onchange="$('#delivery_email_address').val($('#contacts').val());">
+                                                    @foreach (Clarity_HSA.Models.Role role in contacts)
+                                                    {
+                                                        if (role.role_type == "admin" || role.role_type == "employer")
+                                                        {
+                                                            <option value="@role.user.email">@role.user.first_name @role.user.last_name (@role.user.email)</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            }
+                                        </div>
+                                        <script type="text/javascript">
+
+                                            function toggle_delivery_options() {
+                                                $('.delivery_options').hide();
+
+                                                if ($('#delivery_type_1').is(':checked')) {
+                                                    $('#download_file_options').show();
+                                                }
+                                                else if ($('#delivery_type_2').is(':checked')) {
+                                                    $('#ftp_sftp_options').show();
+                                                }
+                                                else if ($('#delivery_type_3').is(':checked')) {
+                                                    $('#email_options').show();
+                                                }
+                                            }
+
+                                            toggle_delivery_options();
+
+                                        </script>
+                                    </td>
+                                </tr>
+                            </table>
+                            <input type="text" name="output_filename" class="form-control" placeholder="Output Filename" value="@report.output_filename" />
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="834_txt_options" style="padding:20px;">
+                            @if (report.report_834_options == null)
+                            {
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td colspan="2"><b>ISA</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA01</td>
+                                        <td><input type="text" class="form-control" name="isa01" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA02</td>
+                                        <td><input type="text" class="form-control" name="isa02" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA03</td>
+                                        <td><input type="text" class="form-control" name="isa03" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA04</td>
+                                        <td><input type="text" class="form-control" name="isa04" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA05</td>
+                                        <td><input type="text" class="form-control" name="isa05" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA06</td>
+                                        <td><input type="text" class="form-control" name="isa06" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA07</td>
+                                        <td><input type="text" class="form-control" name="isa07" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA08</td>
+                                        <td><input type="text" class="form-control" name="isa08" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA13</td>
+                                        <td><input type="text" class="form-control" name="isa13" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA14</td>
+                                        <td><input type="text" class="form-control" name="isa14" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA15</td>
+                                        <td><input type="text" class="form-control" name="isa15" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>GS</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS02</td>
+                                        <td><input type="text" class="form-control" name="gs02" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS03</td>
+                                        <td><input type="text" class="form-control" name="gs03" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS06</td>
+                                        <td><input type="text" class="form-control" name="gs06" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS08</td>
+                                        <td><input type="text" class="form-control" name="gs08" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>BGN</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BGN02</td>
+                                        <td><input type="text" class="form-control" name="bgn02" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BGN06</td>
+                                        <td><input type="text" class="form-control" name="bgn06" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BGN08</td>
+                                        <td><input type="text" class="form-control" name="bgn08" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>REF</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>REF02</td>
+                                        <td><input type="text" class="form-control" name="ref02" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>ST</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ST02</td>
+                                        <td><input type="text" class="form-control" name="st02" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>DTP 1</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_dtp_a" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DTP01</td>
+                                        <td><input type="text" class="form-control" name="dtp01" value="" /></td>
+                                    </tr>
+                                    <tr style="display:none;">
+                                        <td>DTP03</td>
+                                        <td><input type="text" class="form-control" name="dtp03" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>DTP 2</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_dtp_b" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DTP01</td>
+                                        <td><input type="text" class="form-control" name="dtp01b" value="" /></td>
+                                    </tr>
+                                    <tr style="display:none;">
+                                        <td>DTP03</td>
+                                        <td><input type="text" class="form-control" name="dtp03b" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>N1 1</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_n1_a" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>N102</td>
+                                        <td><input type="text" class="form-control" name="n102a" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N103</td>
+                                        <td><input type="text" class="form-control" name="n103a" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N104</td>
+                                        <td><input type="text" class="form-control" name="n104a" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>N1 2</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_n1_b" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>N102</td>
+                                        <td><input type="text" class="form-control" name="n102b" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N103</td>
+                                        <td><input type="text" class="form-control" name="n103b" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N104</td>
+                                        <td><input type="text" class="form-control" name="n104b" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>N1 3</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_n1_c" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>N102</td>
+                                        <td><input type="text" class="form-control" name="n102c" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N103</td>
+                                        <td><input type="text" class="form-control" name="n103c" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N104</td>
+                                        <td><input type="text" class="form-control" name="n104c" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>QTY 1</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_qty_a" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>QTY 2</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_qty_b" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>QTY 3</b></td>
+                                        <td>
+                                            <input type="checkbox" name="include_qty_c" value="1" />
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Other</b></td>
+                                        <td>
+                                            <input type="checkbox" name="remove_line_breaks" value="1" />
+                                            Remove Line Breaks
+                                            <br />
+                                            <input type="checkbox" name="remove_tildes" value="1" />
+                                            Remove Tildes
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                            else
+                            {
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td colspan="2"><b>ISA</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA01</td>
+                                        <td><input type="text" class="form-control" name="isa01" value="@report.report_834_options.isa01" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA02</td>
+                                        <td><input type="text" class="form-control" name="isa02" value="@report.report_834_options.isa02" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA03</td>
+                                        <td><input type="text" class="form-control" name="isa03" value="@report.report_834_options.isa03" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA04</td>
+                                        <td><input type="text" class="form-control" name="isa04" value="@report.report_834_options.isa04" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA05</td>
+                                        <td><input type="text" class="form-control" name="isa05" value="@report.report_834_options.isa05" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA06</td>
+                                        <td><input type="text" class="form-control" name="isa06" value="@report.report_834_options.isa06" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA07</td>
+                                        <td><input type="text" class="form-control" name="isa07" value="@report.report_834_options.isa07" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA08</td>
+                                        <td><input type="text" class="form-control" name="isa08" value="@report.report_834_options.isa08" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA13</td>
+                                        <td><input type="text" class="form-control" name="isa13" value="@report.report_834_options.isa13" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA14</td>
+                                        <td><input type="text" class="form-control" name="isa14" value="@report.report_834_options.isa14" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISA15</td>
+                                        <td><input type="text" class="form-control" name="isa15" value="@report.report_834_options.isa15" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>GS</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS02</td>
+                                        <td><input type="text" class="form-control" name="gs02" value="@report.report_834_options.gs02" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS03</td>
+                                        <td><input type="text" class="form-control" name="gs03" value="@report.report_834_options.gs03" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS06</td>
+                                        <td><input type="text" class="form-control" name="gs06" value="@report.report_834_options.gs06" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS08</td>
+                                        <td><input type="text" class="form-control" name="gs08" value="@report.report_834_options.gs08" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>BGN</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BGN02</td>
+                                        <td><input type="text" class="form-control" name="bgn02" value="@report.report_834_options.bgn02" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BGN06</td>
+                                        <td><input type="text" class="form-control" name="bgn06" value="@report.report_834_options.bgn06" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BGN08</td>
+                                        <td><input type="text" class="form-control" name="bgn08" value="@report.report_834_options.bgn08" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>REF</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>REF02</td>
+                                        <td><input type="text" class="form-control" name="ref02" value="@report.report_834_options.ref02" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>ST</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ST02</td>
+                                        <td><input type="text" class="form-control" name="st02" value="@report.report_834_options.st02" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>DTP 1</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_dtp_a == 1)
+                                            {
+                                                <input type="checkbox" name="include_dtp_a" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_dtp_a" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DTP01</td>
+                                        <td><input type="text" class="form-control" name="dtp01" value="@report.report_834_options.dtp01" /></td>
+                                    </tr>
+                                    <tr style="display:none;">
+                                        <td>DTP03</td>
+                                        <td><input type="text" class="form-control" name="dtp03" value="@report.report_834_options.dtp03" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>DTP 2</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_dtp_b == 1)
+                                            {
+                                                <input type="checkbox" name="include_dtp_b" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_dtp_b" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DTP01</td>
+                                        <td><input type="text" class="form-control" name="dtp01b" value="@report.report_834_options.dtp01b" /></td>
+                                    </tr>
+                                    <tr style="display:none;">
+                                        <td>DTP03</td>
+                                        <td><input type="text" class="form-control" name="dtp03b" value="@report.report_834_options.dtp03b" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>N1 1</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_n1_a == 1)
+                                            {
+                                                <input type="checkbox" name="include_n1_a" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_n1_a" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>N102</td>
+                                        <td><input type="text" class="form-control" name="n102a" value="@report.report_834_options.n102a" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N103</td>
+                                        <td><input type="text" class="form-control" name="n103a" value="@report.report_834_options.n103a" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N104</td>
+                                        <td><input type="text" class="form-control" name="n104a" value="@report.report_834_options.n104a" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>N1 2</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_n1_b == 1)
+                                            {
+                                                <input type="checkbox" name="include_n1_b" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_n1_b" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>N102</td>
+                                        <td><input type="text" class="form-control" name="n102b" value="@report.report_834_options.n102b" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N103</td>
+                                        <td><input type="text" class="form-control" name="n103b" value="@report.report_834_options.n103b" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N104</td>
+                                        <td><input type="text" class="form-control" name="n104b" value="@report.report_834_options.n104b" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>N1 3</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_n1_c == 1)
+                                            {
+                                                <input type="checkbox" name="include_n1_c" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_n1_c" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>N102</td>
+                                        <td><input type="text" class="form-control" name="n102c" value="@report.report_834_options.n102c" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N103</td>
+                                        <td><input type="text" class="form-control" name="n103c" value="@report.report_834_options.n103c" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>N104</td>
+                                        <td><input type="text" class="form-control" name="n104c" value="@report.report_834_options.n104c" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>QTY 1</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_qty_a == 1)
+                                            {
+                                                <input type="checkbox" name="include_qty_a" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_qty_a" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>QTY 2</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_qty_b == 1)
+                                            {
+                                                <input type="checkbox" name="include_qty_b" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_qty_b" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>QTY 3</b></td>
+                                        <td>
+                                            @if (report.report_834_options.include_qty_c == 1)
+                                            {
+                                                <input type="checkbox" name="include_qty_c" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="include_qty_c" value="1" />
+                                            }
+                                            Include
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Other</b></td>
+                                        <td>
+                                            @if (report.report_834_options.remove_line_breaks)
+                                            {
+                                                <input type="checkbox" name="remove_line_breaks" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="remove_line_breaks" value="1" />
+                                            }
+                                            Remove Line Breaks
+                                            <br />
+                                            @if (report.report_834_options.remove_tildes)
+                                            {
+                                                <input type="checkbox" name="remove_tildes" value="1" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="remove_tildes" value="1" />
+                                            }
+                                            Remove Tildes
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="headers_footers" style="padding:20px;">
+                            <input type="text" name="header" class="form-control" placeholder="Header" value="@report.header" />
+                            <input type="text" name="footer" class="form-control" placeholder="Footer" value="@report.footer" />
+                            <br />
+                            <br />
+                            <b>Special Characters:</b>
+                            <br />
+                            XX = Line Count of File, Including Header and Footer
+                            <br />
+                            <br />
+                            <b>Note:</b>
+                            <br />
+                            For 834 files, manual headers and footers will be ignored.
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="report_scheduling" style="padding:20px;">
+                            <h4>Automatically Run Report</h4>
+                            <br />
+                            <table id="schedule-table" class="table table-condensed table-bordered table-striped table-hover">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Recurrence</th>
+                                    <th></th>
+                                </tr>
+                                @foreach (Clarity_HSA.Models.CustomReportSchedule schedule in report.custom_report_schedules)
+                                {
+                                    <tr class="schedule-row">
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="date" class="custom_report_schedule_date form-control" placeholder="" value="@schedule.start_date" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <select class="custom_report_schedule_recurrence form-control">
+                                                    @if (schedule.recurrence == "None")
+                                                    {
+                                                        <option value="None" selected="selected">None</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="None">None</option>
+                                                    }
+                                                    @if (schedule.recurrence == "Daily")
+                                                    {
+                                                        <option value="Daily" selected="selected">Daily</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Daily">Daily</option>
+                                                    }
+                                                    @if (schedule.recurrence == "Weekly")
+                                                    {
+                                                        <option value="Weekly" selected="selected">Weekly</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Weekly">Weekly</option>
+                                                    }
+                                                    @if (schedule.recurrence == "Bi-Weekly")
+                                                    {
+                                                        <option value="Bi-Weekly" selected="selected">Bi-Weekly</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Bi-Weekly">Bi-Weekly</option>
+                                                    }
+                                                    @if (schedule.recurrence == "Monthly")
+                                                    {
+                                                        <option value="Monthly" selected="selected">Monthly</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Monthly">Monthly</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                            <a href="#" class="btn btn-success" onclick="add_schedule_row();">Add Schedule Row</a>
+                            <br /><br />
+                            <input type="text" class="form-control" id="new_xml_file_path" name="new_xml_file_path" placeholder="XML File Path" value="@report.xml_file_path" />
+                            <br /><br />
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_scheduling();">Save Scheduling</button>
+                            <div style="clear:both;"></div>
+
+                            <script type="text/javascript">
+
+                                function add_schedule_row() {
+                                    $('#schedule-table').append('<tr class="schedule-row"><td><div class="input-group"><input type="date" class="custom_report_schedule_date form-control" placeholder="" /></div></td><td><div class="input-group"><select class="custom_report_schedule_recurrence form-control"><option value="None">None</option><option value="Daily">Daily</option><option value="Weekly">Weekly</option><option value="Bi-Weekly">Bi-Weekly</option><option value="Monthly">Monthly</option></select></div></td><td><a href="#" class="btn btn-danger" onclick="$(this).parent().parent().remove();">Delete</a></td></tr>');
+                                }
+
+                                function save_scheduling() {
+                                    var schedules = new Array();
+
+                                    $('.schedule-row').each(function (index) {
+                                        var schedule = {};
+                                        schedule.start_date = $(this).find('.custom_report_schedule_date').val();
+                                        schedule.recurrence = $(this).find('.custom_report_schedule_recurrence').val();
+                                        schedules.push(schedule);
+                                    });
+
+                                    var schedules_obj = {};
+                                    schedules_obj.schedules = schedules;
+
+                                    $('#schedule_json').val(JSON.stringify(schedules_obj));
+                                    $('#xml_file_path').val($('#new_xml_file_path').val());
+                                    $('#scheduling_save_form').submit();
+                                }
+
+                            </script>
+                        </div>
+
+                        @if (report.organization == null)
+                        {
+                            <div role="tabpanel" class="tab-pane" id="access" style="padding:20px;">
+                                <input type="hidden" id="global_report_orgs" name="global_report_orgs" value="" />
+                                @foreach (Clarity_HSA.Models.Organization organization in (List<Clarity_HSA.Models.Organization>)@HttpContext.Current.Session["employer_organizations"])
+                                {
+                                    if (report.global_report_orgs != null)
+                                    {
+                                        if (report.global_report_orgs.Contains("~" + organization.id + "~"))
+                                        {
+                                            <input type="checkbox" class="org_check" id="org_check_@organization.id" onclick="save_access()" checked="checked" /> @organization.name<br />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="org_check" id="org_check_@organization.id" onclick="save_access()" /> @organization.name<br />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="org_check" id="org_check_@organization.id" onclick="save_access()" /> @organization.name<br />
+                                    }
+                                }
+                            </div>
+                            <script type="text/javascript">
+
+                                function save_access() {
+                                    var orgs = "";
+
+                                    $('.org_check:checkbox:checked').each(function () {
+                                        orgs += "~" + $(this).attr('id').replace("org_check_", "") + "~";
+                                    });
+
+                                    $('#global_report_orgs').val(orgs);
+                                }
+
+                            </script>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+
+<form id="scheduling_save_form" action="/ReportBuilder/SaveReportScheduling" method="post">
+    <input type="hidden" name="report_id" value="@report.id" />
+    <input type="hidden" id="schedule_json" name="schedule_json" value="" />
+    <input type="hidden" id="xml_file_path" name="xml_file_path" value="" />
+</form>

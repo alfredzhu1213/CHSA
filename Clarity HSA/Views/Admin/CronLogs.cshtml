@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Cron Logs";
+
+    int organization_id = (int)Session["active_organization"];
+}
+
+<h3>Cron Logs</h3>
+
+<br />
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>Date</th>
+        <th>Cron Type</th>
+        <th>Details</th>
+    </tr>
+    @foreach (Clarity_HSA.Models.CronLog log in (List<Clarity_HSA.Models.CronLog>)@ViewData["logs"])
+    {
+        <tr>
+            <td>@log.cron_timestamp.ToString()</td>
+            <td>@log.cron_type</td>
+            <td>@Html.Raw(log.cron_log)</td>
+        </tr>
+    }
+</table>

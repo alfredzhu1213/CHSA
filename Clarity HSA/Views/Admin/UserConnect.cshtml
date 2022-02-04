@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Connect User";
+
+    var organization = (Clarity_HSA.Models.Organization)@ViewData["organization"];
+}
+
+<h3>Connect User</h3>
+
+<br />
+<form action="/Admin/UserSaveConnect" method="post">
+    <input type="hidden" name="organization_id" value="@organization.id" />
+    <table class="table table-bordered">
+        <tr>
+            <td><label for="user_id">User:</label></td>
+            <td>
+                <select id="user_id" name="user_id" class="form-control">
+                    @foreach (Clarity_HSA.Models.User user in (List<Clarity_HSA.Models.User>)@ViewData["users"])
+                    {
+                        <option value="@user.id">@user.first_name @user.last_name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="roles">Role:</label></td>
+            <td>
+                <select id="roles" name="access_level" class="form-control">
+                    <option value="0">None</option>
+                    <option value="1">View</option>
+                    <option value="2">Edit</option>
+                    <option value="3">Admin</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="organizations">Organization:</label></td>
+            <td>
+                @organization.name
+            </td>
+        </tr>
+    </table>
+    <br /><br />
+    <input type="submit" class="pull-right btn btn-primary" value="Save User" />
+    <div style="clear:both;"></div>
+</form>
