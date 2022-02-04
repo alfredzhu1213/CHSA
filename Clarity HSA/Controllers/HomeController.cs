@@ -22,8 +22,8 @@ namespace Clarity_HSA.Controllers
 
     public class HomeController : Controller
     {
-        Tamir.SharpSsh.Sftp Alegeus_ftp = new Tamir.SharpSsh.Sftp("ftp.wealthcareadmin.com", "benefledi", "VzVR4s4y");
-        Tamir.SharpSsh.Sftp Clarity_ftp = new Tamir.SharpSsh.Sftp("ftp.flexaccount.com", "ClarityIT", "7R7MvTKK");
+        Tamir.SharpSsh.Sftp Alegeus_ftp = new Tamir.SharpSsh.Sftp("ftp.wealthcareadmin.com", "f", "xxx");
+        Tamir.SharpSsh.Sftp Clarity_ftp = new Tamir.SharpSsh.Sftp("ftp.flexaccount.com", "f", "xxx");
 
 
         public ActionResult Index()
